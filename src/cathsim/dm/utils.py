@@ -119,6 +119,8 @@ WRAPPERS = {
     "TimeLimit": (
         wrappers.TimeLimit,
         {"max_episode_steps": lambda cfg: cfg["wrapper_kwargs"].get("time_limit", 300)},
+        # {"max_episode_steps": lambda cfg: cfg["wrapper_kwargs"].get("time_limit", 600)},
+
     ),
     "FlattenObservation": (wrappers.FlattenObservation, {}),
     "MultiInputImageWrapper": (
@@ -135,7 +137,8 @@ WRAPPERS = {
     "SingleDict2Array": (SingleDict2Array, {}),
     "NormalizeObservation": (wrappers.NormalizeObservation, {}),
     "FrameStack": (
-        wrappers.FrameStack,
+        # wrappers.FrameStack,
+        wrappers.FrameStackObservation,
         {"num_stack": lambda cfg: cfg["wrapper_kwargs"].get("frame_stack", 1)},
     ),
 }
@@ -299,6 +302,18 @@ def launch(
         save_trajectories=save_trajectories,
         **kwargs,
     )
+
+    # print("Cameras:", [c.name for c in environment_loader._task._arena.cameras]) 
+    # # 4) 打印每台相机的完整信息
+    # print("\n=== 相机详情 ===")
+    # for c in environment_loader._task._arena.cameras:
+    #     print(f"Name : {c.name}")
+    #     print(f"Pos  : {c.pos}")
+    #     print(f"Quat : {c.quat}")
+    #     print(f"FOVy : {getattr(c, 'fovy', 'N/A')}")
+    #     print("-" * 30)
+
+        
     app.launch(
         environment_loader=environment_loader,
         policy=policy,

@@ -1,0 +1,641 @@
+<mujoco model="artery_0911_move_rotate_x270_high">
+  <compiler angle="radian" meshdir="meshes/"/>
+
+  <default>
+    <geom type="mesh"/>
+  </default>
+
+  <asset>
+    <mesh name="visual" file="artery_0911_move_rotate_x270_high/visual.stl"/>
+    <mesh name="hull_0" file="artery_0911_move_rotate_x270_high/hull_0.stl"/>
+    <mesh name="hull_1" file="artery_0911_move_rotate_x270_high/hull_1.stl"/>
+    <mesh name="hull_2" file="artery_0911_move_rotate_x270_high/hull_2.stl"/>
+    <mesh name="hull_3" file="artery_0911_move_rotate_x270_high/hull_3.stl"/>
+    <mesh name="hull_4" file="artery_0911_move_rotate_x270_high/hull_4.stl"/>
+    <mesh name="hull_5" file="artery_0911_move_rotate_x270_high/hull_5.stl"/>
+    <mesh name="hull_6" file="artery_0911_move_rotate_x270_high/hull_6.stl"/>
+    <mesh name="hull_7" file="artery_0911_move_rotate_x270_high/hull_7.stl"/>
+    <mesh name="hull_8" file="artery_0911_move_rotate_x270_high/hull_8.stl"/>
+    <mesh name="hull_9" file="artery_0911_move_rotate_x270_high/hull_9.stl"/>
+    <mesh name="hull_10" file="artery_0911_move_rotate_x270_high/hull_10.stl"/>
+    <mesh name="hull_11" file="artery_0911_move_rotate_x270_high/hull_11.stl"/>
+    <mesh name="hull_12" file="artery_0911_move_rotate_x270_high/hull_12.stl"/>
+    <mesh name="hull_13" file="artery_0911_move_rotate_x270_high/hull_13.stl"/>
+    <mesh name="hull_14" file="artery_0911_move_rotate_x270_high/hull_14.stl"/>
+    <mesh name="hull_15" file="artery_0911_move_rotate_x270_high/hull_15.stl"/>
+    <mesh name="hull_16" file="artery_0911_move_rotate_x270_high/hull_16.stl"/>
+    <mesh name="hull_17" file="artery_0911_move_rotate_x270_high/hull_17.stl"/>
+    <mesh name="hull_18" file="artery_0911_move_rotate_x270_high/hull_18.stl"/>
+    <mesh name="hull_19" file="artery_0911_move_rotate_x270_high/hull_19.stl"/>
+    <mesh name="hull_20" file="artery_0911_move_rotate_x270_high/hull_20.stl"/>
+    <mesh name="hull_21" file="artery_0911_move_rotate_x270_high/hull_21.stl"/>
+    <mesh name="hull_22" file="artery_0911_move_rotate_x270_high/hull_22.stl"/>
+    <mesh name="hull_23" file="artery_0911_move_rotate_x270_high/hull_23.stl"/>
+    <mesh name="hull_24" file="artery_0911_move_rotate_x270_high/hull_24.stl"/>
+    <mesh name="hull_25" file="artery_0911_move_rotate_x270_high/hull_25.stl"/>
+    <mesh name="hull_26" file="artery_0911_move_rotate_x270_high/hull_26.stl"/>
+    <mesh name="hull_27" file="artery_0911_move_rotate_x270_high/hull_27.stl"/>
+    <mesh name="hull_28" file="artery_0911_move_rotate_x270_high/hull_28.stl"/>
+    <mesh name="hull_29" file="artery_0911_move_rotate_x270_high/hull_29.stl"/>
+    <mesh name="hull_30" file="artery_0911_move_rotate_x270_high/hull_30.stl"/>
+    <mesh name="hull_31" file="artery_0911_move_rotate_x270_high/hull_31.stl"/>
+    <mesh name="hull_32" file="artery_0911_move_rotate_x270_high/hull_32.stl"/>
+    <mesh name="hull_33" file="artery_0911_move_rotate_x270_high/hull_33.stl"/>
+    <mesh name="hull_34" file="artery_0911_move_rotate_x270_high/hull_34.stl"/>
+    <mesh name="hull_35" file="artery_0911_move_rotate_x270_high/hull_35.stl"/>
+    <mesh name="hull_36" file="artery_0911_move_rotate_x270_high/hull_36.stl"/>
+    <mesh name="hull_37" file="artery_0911_move_rotate_x270_high/hull_37.stl"/>
+    <mesh name="hull_38" file="artery_0911_move_rotate_x270_high/hull_38.stl"/>
+    <mesh name="hull_39" file="artery_0911_move_rotate_x270_high/hull_39.stl"/>
+    <mesh name="hull_40" file="artery_0911_move_rotate_x270_high/hull_40.stl"/>
+    <mesh name="hull_41" file="artery_0911_move_rotate_x270_high/hull_41.stl"/>
+    <mesh name="hull_42" file="artery_0911_move_rotate_x270_high/hull_42.stl"/>
+    <mesh name="hull_43" file="artery_0911_move_rotate_x270_high/hull_43.stl"/>
+    <mesh name="hull_44" file="artery_0911_move_rotate_x270_high/hull_44.stl"/>
+    <mesh name="hull_45" file="artery_0911_move_rotate_x270_high/hull_45.stl"/>
+    <mesh name="hull_46" file="artery_0911_move_rotate_x270_high/hull_46.stl"/>
+    <mesh name="hull_47" file="artery_0911_move_rotate_x270_high/hull_47.stl"/>
+    <mesh name="hull_48" file="artery_0911_move_rotate_x270_high/hull_48.stl"/>
+    <mesh name="hull_49" file="artery_0911_move_rotate_x270_high/hull_49.stl"/>
+    <mesh name="hull_50" file="artery_0911_move_rotate_x270_high/hull_50.stl"/>
+    <mesh name="hull_51" file="artery_0911_move_rotate_x270_high/hull_51.stl"/>
+    <mesh name="hull_52" file="artery_0911_move_rotate_x270_high/hull_52.stl"/>
+    <mesh name="hull_53" file="artery_0911_move_rotate_x270_high/hull_53.stl"/>
+    <mesh name="hull_54" file="artery_0911_move_rotate_x270_high/hull_54.stl"/>
+    <mesh name="hull_55" file="artery_0911_move_rotate_x270_high/hull_55.stl"/>
+    <mesh name="hull_56" file="artery_0911_move_rotate_x270_high/hull_56.stl"/>
+    <mesh name="hull_57" file="artery_0911_move_rotate_x270_high/hull_57.stl"/>
+    <mesh name="hull_58" file="artery_0911_move_rotate_x270_high/hull_58.stl"/>
+    <mesh name="hull_59" file="artery_0911_move_rotate_x270_high/hull_59.stl"/>
+    <mesh name="hull_60" file="artery_0911_move_rotate_x270_high/hull_60.stl"/>
+    <mesh name="hull_61" file="artery_0911_move_rotate_x270_high/hull_61.stl"/>
+    <mesh name="hull_62" file="artery_0911_move_rotate_x270_high/hull_62.stl"/>
+    <mesh name="hull_63" file="artery_0911_move_rotate_x270_high/hull_63.stl"/>
+    <mesh name="hull_64" file="artery_0911_move_rotate_x270_high/hull_64.stl"/>
+    <mesh name="hull_65" file="artery_0911_move_rotate_x270_high/hull_65.stl"/>
+    <mesh name="hull_66" file="artery_0911_move_rotate_x270_high/hull_66.stl"/>
+    <mesh name="hull_67" file="artery_0911_move_rotate_x270_high/hull_67.stl"/>
+    <mesh name="hull_68" file="artery_0911_move_rotate_x270_high/hull_68.stl"/>
+    <mesh name="hull_69" file="artery_0911_move_rotate_x270_high/hull_69.stl"/>
+    <mesh name="hull_70" file="artery_0911_move_rotate_x270_high/hull_70.stl"/>
+    <mesh name="hull_71" file="artery_0911_move_rotate_x270_high/hull_71.stl"/>
+    <mesh name="hull_72" file="artery_0911_move_rotate_x270_high/hull_72.stl"/>
+    <mesh name="hull_73" file="artery_0911_move_rotate_x270_high/hull_73.stl"/>
+    <mesh name="hull_74" file="artery_0911_move_rotate_x270_high/hull_74.stl"/>
+    <mesh name="hull_75" file="artery_0911_move_rotate_x270_high/hull_75.stl"/>
+    <mesh name="hull_76" file="artery_0911_move_rotate_x270_high/hull_76.stl"/>
+    <mesh name="hull_77" file="artery_0911_move_rotate_x270_high/hull_77.stl"/>
+    <mesh name="hull_78" file="artery_0911_move_rotate_x270_high/hull_78.stl"/>
+    <mesh name="hull_79" file="artery_0911_move_rotate_x270_high/hull_79.stl"/>
+    <mesh name="hull_80" file="artery_0911_move_rotate_x270_high/hull_80.stl"/>
+    <mesh name="hull_81" file="artery_0911_move_rotate_x270_high/hull_81.stl"/>
+    <mesh name="hull_82" file="artery_0911_move_rotate_x270_high/hull_82.stl"/>
+    <mesh name="hull_83" file="artery_0911_move_rotate_x270_high/hull_83.stl"/>
+    <mesh name="hull_84" file="artery_0911_move_rotate_x270_high/hull_84.stl"/>
+    <mesh name="hull_85" file="artery_0911_move_rotate_x270_high/hull_85.stl"/>
+    <mesh name="hull_86" file="artery_0911_move_rotate_x270_high/hull_86.stl"/>
+    <mesh name="hull_87" file="artery_0911_move_rotate_x270_high/hull_87.stl"/>
+    <mesh name="hull_88" file="artery_0911_move_rotate_x270_high/hull_88.stl"/>
+    <mesh name="hull_89" file="artery_0911_move_rotate_x270_high/hull_89.stl"/>
+    <mesh name="hull_90" file="artery_0911_move_rotate_x270_high/hull_90.stl"/>
+    <mesh name="hull_91" file="artery_0911_move_rotate_x270_high/hull_91.stl"/>
+    <mesh name="hull_92" file="artery_0911_move_rotate_x270_high/hull_92.stl"/>
+    <mesh name="hull_93" file="artery_0911_move_rotate_x270_high/hull_93.stl"/>
+    <mesh name="hull_94" file="artery_0911_move_rotate_x270_high/hull_94.stl"/>
+    <mesh name="hull_95" file="artery_0911_move_rotate_x270_high/hull_95.stl"/>
+    <mesh name="hull_96" file="artery_0911_move_rotate_x270_high/hull_96.stl"/>
+    <mesh name="hull_97" file="artery_0911_move_rotate_x270_high/hull_97.stl"/>
+    <mesh name="hull_98" file="artery_0911_move_rotate_x270_high/hull_98.stl"/>
+    <mesh name="hull_99" file="artery_0911_move_rotate_x270_high/hull_99.stl"/>
+    <mesh name="hull_100" file="artery_0911_move_rotate_x270_high/hull_100.stl"/>
+    <mesh name="hull_101" file="artery_0911_move_rotate_x270_high/hull_101.stl"/>
+    <mesh name="hull_102" file="artery_0911_move_rotate_x270_high/hull_102.stl"/>
+    <mesh name="hull_103" file="artery_0911_move_rotate_x270_high/hull_103.stl"/>
+    <mesh name="hull_104" file="artery_0911_move_rotate_x270_high/hull_104.stl"/>
+    <mesh name="hull_105" file="artery_0911_move_rotate_x270_high/hull_105.stl"/>
+    <mesh name="hull_106" file="artery_0911_move_rotate_x270_high/hull_106.stl"/>
+    <mesh name="hull_107" file="artery_0911_move_rotate_x270_high/hull_107.stl"/>
+    <mesh name="hull_108" file="artery_0911_move_rotate_x270_high/hull_108.stl"/>
+    <mesh name="hull_109" file="artery_0911_move_rotate_x270_high/hull_109.stl"/>
+    <mesh name="hull_110" file="artery_0911_move_rotate_x270_high/hull_110.stl"/>
+    <mesh name="hull_111" file="artery_0911_move_rotate_x270_high/hull_111.stl"/>
+    <mesh name="hull_112" file="artery_0911_move_rotate_x270_high/hull_112.stl"/>
+    <mesh name="hull_113" file="artery_0911_move_rotate_x270_high/hull_113.stl"/>
+    <mesh name="hull_114" file="artery_0911_move_rotate_x270_high/hull_114.stl"/>
+    <mesh name="hull_115" file="artery_0911_move_rotate_x270_high/hull_115.stl"/>
+    <mesh name="hull_116" file="artery_0911_move_rotate_x270_high/hull_116.stl"/>
+    <mesh name="hull_117" file="artery_0911_move_rotate_x270_high/hull_117.stl"/>
+    <mesh name="hull_118" file="artery_0911_move_rotate_x270_high/hull_118.stl"/>
+    <mesh name="hull_119" file="artery_0911_move_rotate_x270_high/hull_119.stl"/>
+    <mesh name="hull_120" file="artery_0911_move_rotate_x270_high/hull_120.stl"/>
+    <mesh name="hull_121" file="artery_0911_move_rotate_x270_high/hull_121.stl"/>
+    <mesh name="hull_122" file="artery_0911_move_rotate_x270_high/hull_122.stl"/>
+    <mesh name="hull_123" file="artery_0911_move_rotate_x270_high/hull_123.stl"/>
+    <mesh name="hull_124" file="artery_0911_move_rotate_x270_high/hull_124.stl"/>
+    <mesh name="hull_125" file="artery_0911_move_rotate_x270_high/hull_125.stl"/>
+    <mesh name="hull_126" file="artery_0911_move_rotate_x270_high/hull_126.stl"/>
+    <mesh name="hull_127" file="artery_0911_move_rotate_x270_high/hull_127.stl"/>
+    <mesh name="hull_128" file="artery_0911_move_rotate_x270_high/hull_128.stl"/>
+    <mesh name="hull_129" file="artery_0911_move_rotate_x270_high/hull_129.stl"/>
+    <mesh name="hull_130" file="artery_0911_move_rotate_x270_high/hull_130.stl"/>
+    <mesh name="hull_131" file="artery_0911_move_rotate_x270_high/hull_131.stl"/>
+    <mesh name="hull_132" file="artery_0911_move_rotate_x270_high/hull_132.stl"/>
+    <mesh name="hull_133" file="artery_0911_move_rotate_x270_high/hull_133.stl"/>
+    <mesh name="hull_134" file="artery_0911_move_rotate_x270_high/hull_134.stl"/>
+    <mesh name="hull_135" file="artery_0911_move_rotate_x270_high/hull_135.stl"/>
+    <mesh name="hull_136" file="artery_0911_move_rotate_x270_high/hull_136.stl"/>
+    <mesh name="hull_137" file="artery_0911_move_rotate_x270_high/hull_137.stl"/>
+    <mesh name="hull_138" file="artery_0911_move_rotate_x270_high/hull_138.stl"/>
+    <mesh name="hull_139" file="artery_0911_move_rotate_x270_high/hull_139.stl"/>
+    <mesh name="hull_140" file="artery_0911_move_rotate_x270_high/hull_140.stl"/>
+    <mesh name="hull_141" file="artery_0911_move_rotate_x270_high/hull_141.stl"/>
+    <mesh name="hull_142" file="artery_0911_move_rotate_x270_high/hull_142.stl"/>
+    <mesh name="hull_143" file="artery_0911_move_rotate_x270_high/hull_143.stl"/>
+    <mesh name="hull_144" file="artery_0911_move_rotate_x270_high/hull_144.stl"/>
+    <mesh name="hull_145" file="artery_0911_move_rotate_x270_high/hull_145.stl"/>
+    <mesh name="hull_146" file="artery_0911_move_rotate_x270_high/hull_146.stl"/>
+    <mesh name="hull_147" file="artery_0911_move_rotate_x270_high/hull_147.stl"/>
+    <mesh name="hull_148" file="artery_0911_move_rotate_x270_high/hull_148.stl"/>
+    <mesh name="hull_149" file="artery_0911_move_rotate_x270_high/hull_149.stl"/>
+    <mesh name="hull_150" file="artery_0911_move_rotate_x270_high/hull_150.stl"/>
+    <mesh name="hull_151" file="artery_0911_move_rotate_x270_high/hull_151.stl"/>
+    <mesh name="hull_152" file="artery_0911_move_rotate_x270_high/hull_152.stl"/>
+    <mesh name="hull_153" file="artery_0911_move_rotate_x270_high/hull_153.stl"/>
+    <mesh name="hull_154" file="artery_0911_move_rotate_x270_high/hull_154.stl"/>
+    <mesh name="hull_155" file="artery_0911_move_rotate_x270_high/hull_155.stl"/>
+    <mesh name="hull_156" file="artery_0911_move_rotate_x270_high/hull_156.stl"/>
+    <mesh name="hull_157" file="artery_0911_move_rotate_x270_high/hull_157.stl"/>
+    <mesh name="hull_158" file="artery_0911_move_rotate_x270_high/hull_158.stl"/>
+    <mesh name="hull_159" file="artery_0911_move_rotate_x270_high/hull_159.stl"/>
+    <mesh name="hull_160" file="artery_0911_move_rotate_x270_high/hull_160.stl"/>
+    <mesh name="hull_161" file="artery_0911_move_rotate_x270_high/hull_161.stl"/>
+    <mesh name="hull_162" file="artery_0911_move_rotate_x270_high/hull_162.stl"/>
+    <mesh name="hull_163" file="artery_0911_move_rotate_x270_high/hull_163.stl"/>
+    <mesh name="hull_164" file="artery_0911_move_rotate_x270_high/hull_164.stl"/>
+    <mesh name="hull_165" file="artery_0911_move_rotate_x270_high/hull_165.stl"/>
+    <mesh name="hull_166" file="artery_0911_move_rotate_x270_high/hull_166.stl"/>
+    <mesh name="hull_167" file="artery_0911_move_rotate_x270_high/hull_167.stl"/>
+    <mesh name="hull_168" file="artery_0911_move_rotate_x270_high/hull_168.stl"/>
+    <mesh name="hull_169" file="artery_0911_move_rotate_x270_high/hull_169.stl"/>
+    <mesh name="hull_170" file="artery_0911_move_rotate_x270_high/hull_170.stl"/>
+    <mesh name="hull_171" file="artery_0911_move_rotate_x270_high/hull_171.stl"/>
+    <mesh name="hull_172" file="artery_0911_move_rotate_x270_high/hull_172.stl"/>
+    <mesh name="hull_173" file="artery_0911_move_rotate_x270_high/hull_173.stl"/>
+    <mesh name="hull_174" file="artery_0911_move_rotate_x270_high/hull_174.stl"/>
+    <mesh name="hull_175" file="artery_0911_move_rotate_x270_high/hull_175.stl"/>
+    <mesh name="hull_176" file="artery_0911_move_rotate_x270_high/hull_176.stl"/>
+    <mesh name="hull_177" file="artery_0911_move_rotate_x270_high/hull_177.stl"/>
+    <mesh name="hull_178" file="artery_0911_move_rotate_x270_high/hull_178.stl"/>
+    <mesh name="hull_179" file="artery_0911_move_rotate_x270_high/hull_179.stl"/>
+    <mesh name="hull_180" file="artery_0911_move_rotate_x270_high/hull_180.stl"/>
+    <mesh name="hull_181" file="artery_0911_move_rotate_x270_high/hull_181.stl"/>
+    <mesh name="hull_182" file="artery_0911_move_rotate_x270_high/hull_182.stl"/>
+    <mesh name="hull_183" file="artery_0911_move_rotate_x270_high/hull_183.stl"/>
+    <mesh name="hull_184" file="artery_0911_move_rotate_x270_high/hull_184.stl"/>
+    <mesh name="hull_185" file="artery_0911_move_rotate_x270_high/hull_185.stl"/>
+    <mesh name="hull_186" file="artery_0911_move_rotate_x270_high/hull_186.stl"/>
+    <mesh name="hull_187" file="artery_0911_move_rotate_x270_high/hull_187.stl"/>
+    <mesh name="hull_188" file="artery_0911_move_rotate_x270_high/hull_188.stl"/>
+    <mesh name="hull_189" file="artery_0911_move_rotate_x270_high/hull_189.stl"/>
+    <mesh name="hull_190" file="artery_0911_move_rotate_x270_high/hull_190.stl"/>
+    <mesh name="hull_191" file="artery_0911_move_rotate_x270_high/hull_191.stl"/>
+    <mesh name="hull_192" file="artery_0911_move_rotate_x270_high/hull_192.stl"/>
+    <mesh name="hull_193" file="artery_0911_move_rotate_x270_high/hull_193.stl"/>
+    <mesh name="hull_194" file="artery_0911_move_rotate_x270_high/hull_194.stl"/>
+    <mesh name="hull_195" file="artery_0911_move_rotate_x270_high/hull_195.stl"/>
+    <mesh name="hull_196" file="artery_0911_move_rotate_x270_high/hull_196.stl"/>
+    <mesh name="hull_197" file="artery_0911_move_rotate_x270_high/hull_197.stl"/>
+    <mesh name="hull_198" file="artery_0911_move_rotate_x270_high/hull_198.stl"/>
+    <mesh name="hull_199" file="artery_0911_move_rotate_x270_high/hull_199.stl"/>
+    <mesh name="hull_200" file="artery_0911_move_rotate_x270_high/hull_200.stl"/>
+    <mesh name="hull_201" file="artery_0911_move_rotate_x270_high/hull_201.stl"/>
+    <mesh name="hull_202" file="artery_0911_move_rotate_x270_high/hull_202.stl"/>
+    <mesh name="hull_203" file="artery_0911_move_rotate_x270_high/hull_203.stl"/>
+    <mesh name="hull_204" file="artery_0911_move_rotate_x270_high/hull_204.stl"/>
+    <mesh name="hull_205" file="artery_0911_move_rotate_x270_high/hull_205.stl"/>
+    <mesh name="hull_206" file="artery_0911_move_rotate_x270_high/hull_206.stl"/>
+    <mesh name="hull_207" file="artery_0911_move_rotate_x270_high/hull_207.stl"/>
+    <mesh name="hull_208" file="artery_0911_move_rotate_x270_high/hull_208.stl"/>
+    <mesh name="hull_209" file="artery_0911_move_rotate_x270_high/hull_209.stl"/>
+    <mesh name="hull_210" file="artery_0911_move_rotate_x270_high/hull_210.stl"/>
+    <mesh name="hull_211" file="artery_0911_move_rotate_x270_high/hull_211.stl"/>
+    <mesh name="hull_212" file="artery_0911_move_rotate_x270_high/hull_212.stl"/>
+    <mesh name="hull_213" file="artery_0911_move_rotate_x270_high/hull_213.stl"/>
+    <mesh name="hull_214" file="artery_0911_move_rotate_x270_high/hull_214.stl"/>
+    <mesh name="hull_215" file="artery_0911_move_rotate_x270_high/hull_215.stl"/>
+    <mesh name="hull_216" file="artery_0911_move_rotate_x270_high/hull_216.stl"/>
+    <mesh name="hull_217" file="artery_0911_move_rotate_x270_high/hull_217.stl"/>
+    <mesh name="hull_218" file="artery_0911_move_rotate_x270_high/hull_218.stl"/>
+    <mesh name="hull_219" file="artery_0911_move_rotate_x270_high/hull_219.stl"/>
+    <mesh name="hull_220" file="artery_0911_move_rotate_x270_high/hull_220.stl"/>
+    <mesh name="hull_221" file="artery_0911_move_rotate_x270_high/hull_221.stl"/>
+    <mesh name="hull_222" file="artery_0911_move_rotate_x270_high/hull_222.stl"/>
+    <mesh name="hull_223" file="artery_0911_move_rotate_x270_high/hull_223.stl"/>
+    <mesh name="hull_224" file="artery_0911_move_rotate_x270_high/hull_224.stl"/>
+    <mesh name="hull_225" file="artery_0911_move_rotate_x270_high/hull_225.stl"/>
+    <mesh name="hull_226" file="artery_0911_move_rotate_x270_high/hull_226.stl"/>
+    <mesh name="hull_227" file="artery_0911_move_rotate_x270_high/hull_227.stl"/>
+    <mesh name="hull_228" file="artery_0911_move_rotate_x270_high/hull_228.stl"/>
+    <mesh name="hull_229" file="artery_0911_move_rotate_x270_high/hull_229.stl"/>
+    <mesh name="hull_230" file="artery_0911_move_rotate_x270_high/hull_230.stl"/>
+    <mesh name="hull_231" file="artery_0911_move_rotate_x270_high/hull_231.stl"/>
+    <mesh name="hull_232" file="artery_0911_move_rotate_x270_high/hull_232.stl"/>
+    <mesh name="hull_233" file="artery_0911_move_rotate_x270_high/hull_233.stl"/>
+    <mesh name="hull_234" file="artery_0911_move_rotate_x270_high/hull_234.stl"/>
+    <mesh name="hull_235" file="artery_0911_move_rotate_x270_high/hull_235.stl"/>
+    <mesh name="hull_236" file="artery_0911_move_rotate_x270_high/hull_236.stl"/>
+    <mesh name="hull_237" file="artery_0911_move_rotate_x270_high/hull_237.stl"/>
+    <mesh name="hull_238" file="artery_0911_move_rotate_x270_high/hull_238.stl"/>
+    <mesh name="hull_239" file="artery_0911_move_rotate_x270_high/hull_239.stl"/>
+    <mesh name="hull_240" file="artery_0911_move_rotate_x270_high/hull_240.stl"/>
+    <mesh name="hull_241" file="artery_0911_move_rotate_x270_high/hull_241.stl"/>
+    <mesh name="hull_242" file="artery_0911_move_rotate_x270_high/hull_242.stl"/>
+    <mesh name="hull_243" file="artery_0911_move_rotate_x270_high/hull_243.stl"/>
+    <mesh name="hull_244" file="artery_0911_move_rotate_x270_high/hull_244.stl"/>
+    <mesh name="hull_245" file="artery_0911_move_rotate_x270_high/hull_245.stl"/>
+    <mesh name="hull_246" file="artery_0911_move_rotate_x270_high/hull_246.stl"/>
+    <mesh name="hull_247" file="artery_0911_move_rotate_x270_high/hull_247.stl"/>
+    <mesh name="hull_248" file="artery_0911_move_rotate_x270_high/hull_248.stl"/>
+    <mesh name="hull_249" file="artery_0911_move_rotate_x270_high/hull_249.stl"/>
+    <mesh name="hull_250" file="artery_0911_move_rotate_x270_high/hull_250.stl"/>
+    <mesh name="hull_251" file="artery_0911_move_rotate_x270_high/hull_251.stl"/>
+    <mesh name="hull_252" file="artery_0911_move_rotate_x270_high/hull_252.stl"/>
+    <mesh name="hull_253" file="artery_0911_move_rotate_x270_high/hull_253.stl"/>
+    <mesh name="hull_254" file="artery_0911_move_rotate_x270_high/hull_254.stl"/>
+    <mesh name="hull_255" file="artery_0911_move_rotate_x270_high/hull_255.stl"/>
+    <mesh name="hull_256" file="artery_0911_move_rotate_x270_high/hull_256.stl"/>
+    <mesh name="hull_257" file="artery_0911_move_rotate_x270_high/hull_257.stl"/>
+    <mesh name="hull_258" file="artery_0911_move_rotate_x270_high/hull_258.stl"/>
+    <mesh name="hull_259" file="artery_0911_move_rotate_x270_high/hull_259.stl"/>
+    <mesh name="hull_260" file="artery_0911_move_rotate_x270_high/hull_260.stl"/>
+    <mesh name="hull_261" file="artery_0911_move_rotate_x270_high/hull_261.stl"/>
+    <mesh name="hull_262" file="artery_0911_move_rotate_x270_high/hull_262.stl"/>
+    <mesh name="hull_263" file="artery_0911_move_rotate_x270_high/hull_263.stl"/>
+    <mesh name="hull_264" file="artery_0911_move_rotate_x270_high/hull_264.stl"/>
+    <mesh name="hull_265" file="artery_0911_move_rotate_x270_high/hull_265.stl"/>
+    <mesh name="hull_266" file="artery_0911_move_rotate_x270_high/hull_266.stl"/>
+    <mesh name="hull_267" file="artery_0911_move_rotate_x270_high/hull_267.stl"/>
+    <mesh name="hull_268" file="artery_0911_move_rotate_x270_high/hull_268.stl"/>
+    <mesh name="hull_269" file="artery_0911_move_rotate_x270_high/hull_269.stl"/>
+    <mesh name="hull_270" file="artery_0911_move_rotate_x270_high/hull_270.stl"/>
+    <mesh name="hull_271" file="artery_0911_move_rotate_x270_high/hull_271.stl"/>
+    <mesh name="hull_272" file="artery_0911_move_rotate_x270_high/hull_272.stl"/>
+    <mesh name="hull_273" file="artery_0911_move_rotate_x270_high/hull_273.stl"/>
+    <mesh name="hull_274" file="artery_0911_move_rotate_x270_high/hull_274.stl"/>
+    <mesh name="hull_275" file="artery_0911_move_rotate_x270_high/hull_275.stl"/>
+    <mesh name="hull_276" file="artery_0911_move_rotate_x270_high/hull_276.stl"/>
+    <mesh name="hull_277" file="artery_0911_move_rotate_x270_high/hull_277.stl"/>
+    <mesh name="hull_278" file="artery_0911_move_rotate_x270_high/hull_278.stl"/>
+    <mesh name="hull_279" file="artery_0911_move_rotate_x270_high/hull_279.stl"/>
+    <mesh name="hull_280" file="artery_0911_move_rotate_x270_high/hull_280.stl"/>
+    <mesh name="hull_281" file="artery_0911_move_rotate_x270_high/hull_281.stl"/>
+    <mesh name="hull_282" file="artery_0911_move_rotate_x270_high/hull_282.stl"/>
+    <mesh name="hull_283" file="artery_0911_move_rotate_x270_high/hull_283.stl"/>
+    <mesh name="hull_284" file="artery_0911_move_rotate_x270_high/hull_284.stl"/>
+    <mesh name="hull_285" file="artery_0911_move_rotate_x270_high/hull_285.stl"/>
+    <mesh name="hull_286" file="artery_0911_move_rotate_x270_high/hull_286.stl"/>
+    <mesh name="hull_287" file="artery_0911_move_rotate_x270_high/hull_287.stl"/>
+    <mesh name="hull_288" file="artery_0911_move_rotate_x270_high/hull_288.stl"/>
+    <mesh name="hull_289" file="artery_0911_move_rotate_x270_high/hull_289.stl"/>
+    <mesh name="hull_290" file="artery_0911_move_rotate_x270_high/hull_290.stl"/>
+    <mesh name="hull_291" file="artery_0911_move_rotate_x270_high/hull_291.stl"/>
+    <mesh name="hull_292" file="artery_0911_move_rotate_x270_high/hull_292.stl"/>
+    <mesh name="hull_293" file="artery_0911_move_rotate_x270_high/hull_293.stl"/>
+    <mesh name="hull_294" file="artery_0911_move_rotate_x270_high/hull_294.stl"/>
+    <mesh name="hull_295" file="artery_0911_move_rotate_x270_high/hull_295.stl"/>
+    <mesh name="hull_296" file="artery_0911_move_rotate_x270_high/hull_296.stl"/>
+    <mesh name="hull_297" file="artery_0911_move_rotate_x270_high/hull_297.stl"/>
+    <mesh name="hull_298" file="artery_0911_move_rotate_x270_high/hull_298.stl"/>
+    <mesh name="hull_299" file="artery_0911_move_rotate_x270_high/hull_299.stl"/>
+    <mesh name="hull_300" file="artery_0911_move_rotate_x270_high/hull_300.stl"/>
+    <mesh name="hull_301" file="artery_0911_move_rotate_x270_high/hull_301.stl"/>
+    <mesh name="hull_302" file="artery_0911_move_rotate_x270_high/hull_302.stl"/>
+    <mesh name="hull_303" file="artery_0911_move_rotate_x270_high/hull_303.stl"/>
+    <mesh name="hull_304" file="artery_0911_move_rotate_x270_high/hull_304.stl"/>
+    <mesh name="hull_305" file="artery_0911_move_rotate_x270_high/hull_305.stl"/>
+    <mesh name="hull_306" file="artery_0911_move_rotate_x270_high/hull_306.stl"/>
+    <mesh name="hull_307" file="artery_0911_move_rotate_x270_high/hull_307.stl"/>
+    <mesh name="hull_308" file="artery_0911_move_rotate_x270_high/hull_308.stl"/>
+    <mesh name="hull_309" file="artery_0911_move_rotate_x270_high/hull_309.stl"/>
+    <mesh name="hull_310" file="artery_0911_move_rotate_x270_high/hull_310.stl"/>
+    <mesh name="hull_311" file="artery_0911_move_rotate_x270_high/hull_311.stl"/>
+  </asset>
+
+  <worldbody>
+    <body name="phantom">
+      <geom name="visual" contype="0" conaffinity="0" mesh="visual"/>
+      <geom mesh="hull_0"/>
+      <geom mesh="hull_1"/>
+      <geom mesh="hull_2"/>
+      <geom mesh="hull_3"/>
+      <geom mesh="hull_4"/>
+      <geom mesh="hull_5"/>
+      <geom mesh="hull_6"/>
+      <geom mesh="hull_7"/>
+      <geom mesh="hull_8"/>
+      <geom mesh="hull_9"/>
+      <geom mesh="hull_10"/>
+      <geom mesh="hull_11"/>
+      <geom mesh="hull_12"/>
+      <geom mesh="hull_13"/>
+      <geom mesh="hull_14"/>
+      <geom mesh="hull_15"/>
+      <geom mesh="hull_16"/>
+      <geom mesh="hull_17"/>
+      <geom mesh="hull_18"/>
+      <geom mesh="hull_19"/>
+      <geom mesh="hull_20"/>
+      <geom mesh="hull_21"/>
+      <geom mesh="hull_22"/>
+      <geom mesh="hull_23"/>
+      <geom mesh="hull_24"/>
+      <geom mesh="hull_25"/>
+      <geom mesh="hull_26"/>
+      <geom mesh="hull_27"/>
+      <geom mesh="hull_28"/>
+      <geom mesh="hull_29"/>
+      <geom mesh="hull_30"/>
+      <geom mesh="hull_31"/>
+      <geom mesh="hull_32"/>
+      <geom mesh="hull_33"/>
+      <geom mesh="hull_34"/>
+      <geom mesh="hull_35"/>
+      <geom mesh="hull_36"/>
+      <geom mesh="hull_37"/>
+      <geom mesh="hull_38"/>
+      <geom mesh="hull_39"/>
+      <geom mesh="hull_40"/>
+      <geom mesh="hull_41"/>
+      <geom mesh="hull_42"/>
+      <geom mesh="hull_43"/>
+      <geom mesh="hull_44"/>
+      <geom mesh="hull_45"/>
+      <geom mesh="hull_46"/>
+      <geom mesh="hull_47"/>
+      <geom mesh="hull_48"/>
+      <geom mesh="hull_49"/>
+      <geom mesh="hull_50"/>
+      <geom mesh="hull_51"/>
+      <geom mesh="hull_52"/>
+      <geom mesh="hull_53"/>
+      <geom mesh="hull_54"/>
+      <geom mesh="hull_55"/>
+      <geom mesh="hull_56"/>
+      <geom mesh="hull_57"/>
+      <geom mesh="hull_58"/>
+      <geom mesh="hull_59"/>
+      <geom mesh="hull_60"/>
+      <geom mesh="hull_61"/>
+      <geom mesh="hull_62"/>
+      <geom mesh="hull_63"/>
+      <geom mesh="hull_64"/>
+      <geom mesh="hull_65"/>
+      <geom mesh="hull_66"/>
+      <geom mesh="hull_67"/>
+      <geom mesh="hull_68"/>
+      <geom mesh="hull_69"/>
+      <geom mesh="hull_70"/>
+      <geom mesh="hull_71"/>
+      <geom mesh="hull_72"/>
+      <geom mesh="hull_73"/>
+      <geom mesh="hull_74"/>
+      <geom mesh="hull_75"/>
+      <geom mesh="hull_76"/>
+      <geom mesh="hull_77"/>
+      <geom mesh="hull_78"/>
+      <geom mesh="hull_79"/>
+      <geom mesh="hull_80"/>
+      <geom mesh="hull_81"/>
+      <geom mesh="hull_82"/>
+      <geom mesh="hull_83"/>
+      <geom mesh="hull_84"/>
+      <geom mesh="hull_85"/>
+      <geom mesh="hull_86"/>
+      <geom mesh="hull_87"/>
+      <geom mesh="hull_88"/>
+      <geom mesh="hull_89"/>
+      <geom mesh="hull_90"/>
+      <geom mesh="hull_91"/>
+      <geom mesh="hull_92"/>
+      <geom mesh="hull_93"/>
+      <geom mesh="hull_94"/>
+      <geom mesh="hull_95"/>
+      <geom mesh="hull_96"/>
+      <geom mesh="hull_97"/>
+      <geom mesh="hull_98"/>
+      <geom mesh="hull_99"/>
+      <geom mesh="hull_100"/>
+      <geom mesh="hull_101"/>
+      <geom mesh="hull_102"/>
+      <geom mesh="hull_103"/>
+      <geom mesh="hull_104"/>
+      <geom mesh="hull_105"/>
+      <geom mesh="hull_106"/>
+      <geom mesh="hull_107"/>
+      <geom mesh="hull_108"/>
+      <geom mesh="hull_109"/>
+      <geom mesh="hull_110"/>
+      <geom mesh="hull_111"/>
+      <geom mesh="hull_112"/>
+      <geom mesh="hull_113"/>
+      <geom mesh="hull_114"/>
+      <geom mesh="hull_115"/>
+      <geom mesh="hull_116"/>
+      <geom mesh="hull_117"/>
+      <geom mesh="hull_118"/>
+      <geom mesh="hull_119"/>
+      <geom mesh="hull_120"/>
+      <geom mesh="hull_121"/>
+      <geom mesh="hull_122"/>
+      <geom mesh="hull_123"/>
+      <geom mesh="hull_124"/>
+      <geom mesh="hull_125"/>
+      <geom mesh="hull_126"/>
+      <geom mesh="hull_127"/>
+      <geom mesh="hull_128"/>
+      <geom mesh="hull_129"/>
+      <geom mesh="hull_130"/>
+      <geom mesh="hull_131"/>
+      <geom mesh="hull_132"/>
+      <geom mesh="hull_133"/>
+      <geom mesh="hull_134"/>
+      <geom mesh="hull_135"/>
+      <geom mesh="hull_136"/>
+      <geom mesh="hull_137"/>
+      <geom mesh="hull_138"/>
+      <geom mesh="hull_139"/>
+      <geom mesh="hull_140"/>
+      <geom mesh="hull_141"/>
+      <geom mesh="hull_142"/>
+      <geom mesh="hull_143"/>
+      <geom mesh="hull_144"/>
+      <geom mesh="hull_145"/>
+      <geom mesh="hull_146"/>
+      <geom mesh="hull_147"/>
+      <geom mesh="hull_148"/>
+      <geom mesh="hull_149"/>
+      <geom mesh="hull_150"/>
+      <geom mesh="hull_151"/>
+      <geom mesh="hull_152"/>
+      <geom mesh="hull_153"/>
+      <geom mesh="hull_154"/>
+      <geom mesh="hull_155"/>
+      <geom mesh="hull_156"/>
+      <geom mesh="hull_157"/>
+      <geom mesh="hull_158"/>
+      <geom mesh="hull_159"/>
+      <geom mesh="hull_160"/>
+      <geom mesh="hull_161"/>
+      <geom mesh="hull_162"/>
+      <geom mesh="hull_163"/>
+      <geom mesh="hull_164"/>
+      <geom mesh="hull_165"/>
+      <geom mesh="hull_166"/>
+      <geom mesh="hull_167"/>
+      <geom mesh="hull_168"/>
+      <geom mesh="hull_169"/>
+      <geom mesh="hull_170"/>
+      <geom mesh="hull_171"/>
+      <geom mesh="hull_172"/>
+      <geom mesh="hull_173"/>
+      <geom mesh="hull_174"/>
+      <geom mesh="hull_175"/>
+      <geom mesh="hull_176"/>
+      <geom mesh="hull_177"/>
+      <geom mesh="hull_178"/>
+      <geom mesh="hull_179"/>
+      <geom mesh="hull_180"/>
+      <geom mesh="hull_181"/>
+      <geom mesh="hull_182"/>
+      <geom mesh="hull_183"/>
+      <geom mesh="hull_184"/>
+      <geom mesh="hull_185"/>
+      <geom mesh="hull_186"/>
+      <geom mesh="hull_187"/>
+      <geom mesh="hull_188"/>
+      <geom mesh="hull_189"/>
+      <geom mesh="hull_190"/>
+      <geom mesh="hull_191"/>
+      <geom mesh="hull_192"/>
+      <geom mesh="hull_193"/>
+      <geom mesh="hull_194"/>
+      <geom mesh="hull_195"/>
+      <geom mesh="hull_196"/>
+      <geom mesh="hull_197"/>
+      <geom mesh="hull_198"/>
+      <geom mesh="hull_199"/>
+      <geom mesh="hull_200"/>
+      <geom mesh="hull_201"/>
+      <geom mesh="hull_202"/>
+      <geom mesh="hull_203"/>
+      <geom mesh="hull_204"/>
+      <geom mesh="hull_205"/>
+      <geom mesh="hull_206"/>
+      <geom mesh="hull_207"/>
+      <geom mesh="hull_208"/>
+      <geom mesh="hull_209"/>
+      <geom mesh="hull_210"/>
+      <geom mesh="hull_211"/>
+      <geom mesh="hull_212"/>
+      <geom mesh="hull_213"/>
+      <geom mesh="hull_214"/>
+      <geom mesh="hull_215"/>
+      <geom mesh="hull_216"/>
+      <geom mesh="hull_217"/>
+      <geom mesh="hull_218"/>
+      <geom mesh="hull_219"/>
+      <geom mesh="hull_220"/>
+      <geom mesh="hull_221"/>
+      <geom mesh="hull_222"/>
+      <geom mesh="hull_223"/>
+      <geom mesh="hull_224"/>
+      <geom mesh="hull_225"/>
+      <geom mesh="hull_226"/>
+      <geom mesh="hull_227"/>
+      <geom mesh="hull_228"/>
+      <geom mesh="hull_229"/>
+      <geom mesh="hull_230"/>
+      <geom mesh="hull_231"/>
+      <geom mesh="hull_232"/>
+      <geom mesh="hull_233"/>
+      <geom mesh="hull_234"/>
+      <geom mesh="hull_235"/>
+      <geom mesh="hull_236"/>
+      <geom mesh="hull_237"/>
+      <geom mesh="hull_238"/>
+      <geom mesh="hull_239"/>
+      <geom mesh="hull_240"/>
+      <geom mesh="hull_241"/>
+      <geom mesh="hull_242"/>
+      <geom mesh="hull_243"/>
+      <geom mesh="hull_244"/>
+      <geom mesh="hull_245"/>
+      <geom mesh="hull_246"/>
+      <geom mesh="hull_247"/>
+      <geom mesh="hull_248"/>
+      <geom mesh="hull_249"/>
+      <geom mesh="hull_250"/>
+      <geom mesh="hull_251"/>
+      <geom mesh="hull_252"/>
+      <geom mesh="hull_253"/>
+      <geom mesh="hull_254"/>
+      <geom mesh="hull_255"/>
+      <geom mesh="hull_256"/>
+      <geom mesh="hull_257"/>
+      <geom mesh="hull_258"/>
+      <geom mesh="hull_259"/>
+      <geom mesh="hull_260"/>
+      <geom mesh="hull_261"/>
+      <geom mesh="hull_262"/>
+      <geom mesh="hull_263"/>
+      <geom mesh="hull_264"/>
+      <geom mesh="hull_265"/>
+      <geom mesh="hull_266"/>
+      <geom mesh="hull_267"/>
+      <geom mesh="hull_268"/>
+      <geom mesh="hull_269"/>
+      <geom mesh="hull_270"/>
+      <geom mesh="hull_271"/>
+      <geom mesh="hull_272"/>
+      <geom mesh="hull_273"/>
+      <geom mesh="hull_274"/>
+      <geom mesh="hull_275"/>
+      <geom mesh="hull_276"/>
+      <geom mesh="hull_277"/>
+      <geom mesh="hull_278"/>
+      <geom mesh="hull_279"/>
+      <geom mesh="hull_280"/>
+      <geom mesh="hull_281"/>
+      <geom mesh="hull_282"/>
+      <geom mesh="hull_283"/>
+      <geom mesh="hull_284"/>
+      <geom mesh="hull_285"/>
+      <geom mesh="hull_286"/>
+      <geom mesh="hull_287"/>
+      <geom mesh="hull_288"/>
+      <geom mesh="hull_289"/>
+      <geom mesh="hull_290"/>
+      <geom mesh="hull_291"/>
+      <geom mesh="hull_292"/>
+      <geom mesh="hull_293"/>
+      <geom mesh="hull_294"/>
+      <geom mesh="hull_295"/>
+      <geom mesh="hull_296"/>
+      <geom mesh="hull_297"/>
+      <geom mesh="hull_298"/>
+      <geom mesh="hull_299"/>
+      <geom mesh="hull_300"/>
+      <geom mesh="hull_301"/>
+      <geom mesh="hull_302"/>
+      <geom mesh="hull_303"/>
+      <geom mesh="hull_304"/>
+      <geom mesh="hull_305"/>
+      <geom mesh="hull_306"/>
+      <geom mesh="hull_307"/>
+      <geom mesh="hull_308"/>
+      <geom mesh="hull_309"/>
+      <geom mesh="hull_310"/>
+      <geom mesh="hull_311"/>
+    </body>
+  </worldbody>
+</mujoco>

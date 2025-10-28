@@ -1,0 +1,444 @@
+import trimesh
+import mujoco
+from lxml import etree
+import sys
+import shutil
+from trimesh.decomposition import convex_decomposition
+from pathlib import Path
+from mujoco import viewer
+import yaml
+import os
+
+
+VHACD_EXECUTABLE = shutil.which("testVHACD")
+
+if VHACD_EXECUTABLE is None:
+
+    def install_vhacd():
+        response = input("ONLY PROCEED IF THE SIYSTEM IS LINUX\nProceed? (N/y):")
+        if response != "y":
+            exit()
+        cmd = """
+        set -xe;
+        rm -f testVHACD;
+        wget https://github.com/mikedh/v-hacd-1/raw/master/bin/linux/testVHACD;
+        echo "e1e79b2c1b274a39950ffc48807ecb0c81a2192e7d0993c686da90bd33985130  testVHACD" | sha256sum --check;
+        chmod +x testVHACD;
+        sudo mv testVHACD /usr/bin/;
+        """
+        os.system(cmd)
+
+    print("VHACD executable not found. Please install VHACD.")
+    install_vhacd()
+
+
+def load_config(path: Path) -> dict:
+    with open(path, "r") as file:
+        config = yaml.safe_load(file)
+    return config
+
+
+def parse_args():
+    # 参数	               含义	                    最小值	 最大值	     推荐默认值	    想提高精度→如何改
+    # -resolution	体素化阶段的总网格数（越大越细）	10 000	16 000 000	1 000 000	↑ 增大（例如 5 000 000）
+    # --maxhulls	最多生成多少个凸包（越多越贴合）	1	   100 000+	    100 000	    ↑ 增大（但别超过 1e6，否则文件爆炸）
+    # --concavity	允许的最大凹度（越小越精细）	   0.0	    1.0	        0.0025	    ↓ 减小（0.001 ~ 0.0001）
+    # --planeDownsampling寻找“最佳切割面”时的精细度（1=最细）	1	16	      4	        ↓ 减小（1 或 2）
+    # --convexhullDownsampling	生成凸包时的采样精度（1=最细）	1	16	      4	         ↓ 减小（1 或 2）
+    # --alpha	对称面切割的偏好权重	              0.0	   1.0	       0.05	        一般不动；想更对称可↑
+    # --beta	旋转轴切割的偏好权重	              0.0	   1.0	       0.05	        一般不动；想更旋转对称可↑
+    # --gamma	合并阶段允许的凹度上限	              0.0	   1.0	        0.00125	    ↓减小（0.0005）
+    # --delta	局部凹度最大化的偏好	              0.0	   1.0	       0.05	         通常不动
+    # --maxNumVerticesPerCH	每个凸包最多顶点/三角形数	4	   1024	        64	        ↓ 减小（32 或 16）→更细碎但更贴合
+    # --minVolumePerCH	最小凸包体积阈值	0.0	              0.01	      0.0001	  ↓ 减小（0.00001）→允许更小碎片
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Convert STL to MJCF")
+    parser.add_argument(
+        "-f",
+        "--folder",
+        type=str,
+        default="meshes/",
+        required=True,
+        help="Folder with STL files",
+    )
+    parser.add_argument(
+        "-r",
+        "--resolution",
+        type=int,
+        default=1_000_000,
+        help="Maximum number of voxels generated during the voxelization stage(range=10, 000-16, 000, 000)",
+    )
+    parser.add_argument(
+        "-mh",
+        "--maxhulls",
+        type=int,
+        help="Maximum number of convex hulls to produce",
+        default=100_000,
+    )
+    parser.add_argument(
+        "--concavity",
+        type=float,
+        help="Maximum allowed concavity(range=0.0-1.0)",
+        default=0.0025,
+    )
+    parser.add_argument(
+        "--regex",
+        type=str,
+        default=".stl",
+        help="Select which STL to decompose based on REGEX",
+    )
+    parser.add_argument(
+        "-pd",
+        "--planeDownsampling",
+        type=int,
+        default=4,
+        help='Controls the granularity of the search for the "best" clipping plane(range=1-16)',
+    )
+    parser.add_argument(
+        "-cd",
+        "--convexhullDownsampling",
+        type=int,
+        default=4,
+        help="Controls the precision of the convex-hull generation process during the clipping plane selection stage(range=1-16)",
+    )
+    parser.add_argument(
+        "-a",
+        "--alpha",
+        type=float,
+        default=0.05,
+        help="Controls the bias toward clipping along symmetry planes(range=0.0-1.0)",
+    )
+    parser.add_argument(
+        "-b",
+        "--beta",
+        type=float,
+        default=0.05,
+        help="Controls the bias toward clipping along revolution axes(range=0.0-1.0)",
+    )
+    parser.add_argument(
+        "-g",
+        "--gamma",
+        type=float,
+        default=0.00125,
+        help="Controls the maximum allowed concavity during the merge stage(range=0.0-1.0)",
+    )
+    parser.add_argument(
+        "--delta",
+        type=float,
+        default=0.05,
+        help="Controls the bias toward maximaxing local concavity(range=0.0-1.0)",
+    )
+    parser.add_argument(
+        "-mnv",
+        "--maxNumVerticesPerCH",
+        type=int,
+        default=64,
+        help="Controls the maximum number of triangles per convex-hull(range=4-1024)",
+    )
+    parser.add_argument(
+        "-mv",
+        "--minVolumePerCH",
+        type=float,
+        default=0.0001,
+        help="Controls the adaptive sampling of the generated convex-hulls(range=0.0-0.01)",
+    )
+    parser.add_argument(
+        "-c",
+        "--compile",
+        action="store_true",
+        default=False,
+        help="Testing if MuJoCo compilation is successfull",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        default=True,
+        help="Allow V-HACD output?",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        default="output/",
+        help="Output folder for the convex hulls and xml file",
+    )
+    parser.add_argument(
+        "-d",
+        "--decompose",
+        action="store_true",
+        default=False,
+        help="Use convex decomposition?",
+    )
+    parser.add_argument(
+        "-vm",
+        "--visualize",
+        action="store_true",
+        default=False,
+        help="Visualize the model in MuJoCo. Note: requires the visualize flag as well",
+    )
+    return parser.parse_args()
+
+
+def create_mjcf(
+    collision_hulls: list, output_folder_path: str, mesh_name: str = None
+) -> etree.ElementTree:
+    """create mjcf file from collision hulls"""
+
+    def validate_meshes(collision_hulls: list, treshold: float = 1e-6) -> list:
+        for hull in collision_hulls:
+            if hull.volume < treshold:
+                collision_hulls.remove(hull)
+        return collision_hulls
+
+    root = etree.Element("mujoco")
+    root.set("model", mesh_name)
+    compiler = etree.SubElement(root, "compiler")
+    compiler.set("meshdir", "meshes")
+
+    default = etree.SubElement(root, "default")
+    default_geom = etree.SubElement(default, "geom")
+    default_geom.set("type", "mesh")
+
+    asset = etree.SubElement(root, "asset")
+    worldbody = etree.SubElement(root, "worldbody")
+    body = etree.SubElement(worldbody, "body")
+    body.set("name", "phantom")
+
+    mesh_asset = etree.Element("mesh")
+    mesh_asset.set("name", "visual")
+    mesh_asset.set("file", f"{mesh_name}/visual.stl")
+    asset.append(mesh_asset)
+
+    geom = etree.Element("geom")
+    geom.set("name", "visual")
+    geom.set("mesh", "visual")
+    geom.set("contype", "0")
+    geom.set("conaffinity", "0")
+    body.append(geom)
+
+    for i in range(len(collision_hulls)):
+        convex_hull_name = f"hull_{i}"
+        convex_hull_mesh = etree.Element("mesh")
+        convex_hull_mesh.set("name", convex_hull_name)
+        convex_hull_mesh.set("file", f"{mesh_name}/{convex_hull_name}.stl")
+        asset.append(convex_hull_mesh)
+
+        convex_hull_geom = etree.Element("geom")
+        convex_hull_geom.set("mesh", convex_hull_name)
+        body.append(convex_hull_geom)
+
+    tree = etree.ElementTree(root)
+    etree.indent(tree, space="  ", level=0)
+
+    return tree
+
+
+def test_compile(mesh_name: str):
+    try:
+        model = mujoco.MjModel.from_xml_path(mesh_name + ".xml")
+        data = mujoco.MjData(model)
+        while data.time < 1:
+            mujoco.mj_step(model, data)
+    except Exception as e:
+        print(e)
+        print("Error compiling model.")
+
+
+def export_meshes(
+    collision_hulls: list, output_folder_path: Path, mesh_name: str = None
+) -> None:
+    """export hulls to stl files"""
+    for i, hull_dict in enumerate(collision_hulls):
+        export_name = f"hull_{i}.stl"
+       # hull.export(output_folder_path / export_name)
+        # 从 dict 重新构造 Trimesh
+        # hull_mesh = trimesh.Trimesh(vertices=hull_dict["vertices"],faces=hull_dict["faces"])
+        hull_mesh = trimesh.Trimesh(vertices=hull_dict.vertices,faces=hull_dict.faces)
+        hull_mesh.export(output_folder_path / export_name)
+
+def validate_meshes(
+    collision_hulls: list, output_folder_path: Path, mesh_name: str = None
+) -> trimesh.Trimesh:
+    """validate meshes using trimesh"""
+    while True:
+        try:
+            model = mujoco.MjModel.from_xml_path(
+                output_folder_path / f"{mesh_name}.xml"
+            )
+            data = mujoco.MjData(model)
+            while data.time < 1:
+                mujoco.mj_step(model, data)
+        except Exception as e:
+            # get the name of the hull that caused the error
+            hull_name = e.args[0].split(" ")[-1]
+            hull_index = int(hull_name.split("_")[-1].split(".")[0])
+            # remove the hull from the list
+            collision_hulls.pop(hull_index)
+
+    return collision_hulls
+
+
+def main():
+    args = parse_args()
+    dir_path = Path(args.folder)
+    output_folder = Path(args.output)
+    output_folder.mkdir(parents=True, exist_ok=True)
+
+    if not dir_path.exists():
+        print(f"Folder {dir_path} does not exist.")
+        exit(1)
+
+    for file in dir_path.glob("*.stl"):
+        mesh_name = file.stem
+        output_folder_path = output_folder / "meshes" / mesh_name
+
+        print(f"\n...Processing {file}...")
+
+        if args.decompose:
+            if output_folder_path.exists() and output_folder_path.iterdir():
+                cont = input(
+                    f"Output directory {output_folder_path.as_posix()} already exists and is not empty. Do you want to overwrite it? [y/n] "
+                )
+                if cont != "y":
+                    exit(0)
+
+            shutil.rmtree(output_folder_path, ignore_errors=True)
+            mesh = trimesh.load_mesh(file)
+            print("len(mesh.faces)===",len(mesh.faces))
+            # if len(mesh.faces) > 2e5:
+            if len(mesh.faces) > 2e7:
+                print(
+                    f"Mesh {mesh_name} has more than 200k faces ({len(mesh.faces)}). Skipping."
+                )
+                continue
+
+            output_folder_path.mkdir(parents=True, exist_ok=True)
+
+            print(f"\n...Decomposing {mesh_name}...")
+
+            convex_hulls = convex_decomposition(
+                mesh=mesh,
+                debug=args.verbose,
+                resolution=args.resolution,
+                maxhulls=args.maxhulls,
+                concavity=args.concavity,
+                planeDownsampling=args.planeDownsampling,
+                convexhullDownsampling=args.convexhullDownsampling,
+                alpha=args.alpha,
+                beta=args.beta,
+                gamma=args.gamma,
+                delta=args.delta,
+                maxNumVerticesPerCH=args.maxNumVerticesPerCH,
+                minVolumePerCH=args.minVolumePerCH,
+            )
+            # convex_hulls = convex_decomposition(mesh=mesh)
+            # convex_hulls = convex_decomposition_with_progress(
+            #     mesh=mesh,
+            #     debug=args.verbose,
+            #     resolution=args.resolution,
+            #     maxhulls=args.maxhulls,
+            #     concavity=args.concavity,
+            #     planeDownsampling=args.planeDownsampling,
+            #     convexhullDownsampling=args.convexhullDownsampling,
+            #     alpha=args.alpha,
+            #     beta=args.beta,
+            #     gamma=args.gamma,
+            #     delta=args.delta,
+            #     maxNumVerticesPerCH=args.maxNumVerticesPerCH,
+            #     minVolumePerCH=args.minVolumePerCH,
+            # )
+            export_meshes(convex_hulls, output_folder_path, mesh_name)
+
+            mesh.export(output_folder_path / "visual.stl")
+            ## 保存视觉网格前，先简化
+            #target_faces = min(199_000, len(mesh.faces))
+            #ratio = target_faces / len(mesh.faces)
+            #simplified = mesh.simplify_quadric_decimation(ratio)  # 最多 20 万面
+            #simplified.export(output_folder_path / "visual.stl")
+
+            print(f"\n...Creating MJCF for {mesh_name}...")
+
+            tree = create_mjcf(convex_hulls, output_folder_path, mesh_name)
+
+            with open(output_folder / (mesh_name + ".xml"), "wb") as files:
+                tree.write(files)
+
+        if args.compile:
+            print(f"\n...Compiling {mesh_name}...")
+            test_compile((output_folder / mesh_name).as_posix())
+
+            if args.visualize:
+                print(f"\n...Visualizing {mesh_name}...")
+                model = mujoco.MjModel.from_xml_path(
+                    (output_folder / mesh_name).as_posix() + ".xml"
+                )
+                viewer.launch(model)
+
+        print(f"\n...Done processing {file}...\n")
+
+
+# import subprocess, sys, os, tempfile, shutil
+# from pathlib import Path
+# import trimesh
+
+# def convex_decomposition_with_progress(mesh: trimesh.Trimesh, **kwargs):
+#     """
+#     对 convex_decomposition 的包装，实时打印 VHACD 日志，方便观察进度。
+#     """
+#     # 1. 先把原始 mesh 导出成临时 obj（VHACD 要求）
+#     tmp_dir = Path(tempfile.mkdtemp())
+#     in_file  = tmp_dir / "input.obj"
+#     out_file = tmp_dir / "out.obj"
+#     log_file = tmp_dir / "vhacd.log"
+#     mesh.export(in_file)
+
+#     # 2. 构造命令行（与 trimesh 内部完全一致）
+#     from trimesh.interfaces.vhacd import _vhacd_executable
+#     if _vhacd_executable is None:
+#         raise RuntimeError("testVHACD not found！")
+#     cmd = [
+#         str(_vhacd_executable),
+#         "--input",  str(in_file),
+#         "--output", str(out_file),
+#         "--log",    str(log_file),
+#     ]
+#     for k, v in kwargs.items():
+#         cmd += [f"--{k}", str(v)]
+
+#     # 3. 启动子进程，实时打印 stdout / stderr
+#     print("[VHACD] >>> " + " ".join(cmd))
+#     proc = subprocess.Popen(
+#         cmd,
+#         stdout=subprocess.PIPE,
+#         stderr=subprocess.STDOUT,
+#         universal_newlines=True,
+#         bufsize=1,
+#     )
+#     for line in proc.stdout:
+#         # 每收到一行就打印，实现“实时”
+#         print(line, end="")
+#     proc.wait()
+#     if proc.returncode != 0:
+#         raise RuntimeError("VHACD failed!")
+
+#     # 4. 把输出文件读回成 trimesh 列表
+#     #    VHACD 会生成一个 .obj，里面每个子物体即一个凸包
+#     scene = trimesh.load(out_file)
+#     if isinstance(scene, trimesh.Trimesh):
+#         # 只有一个凸包
+#         hulls = [scene]
+#     elif hasattr(scene, "geometry"):
+#         hulls = list(scene.geometry.values())
+#     else:
+#         hulls = [scene]
+
+#     # 5. 清理临时文件
+#     shutil.rmtree(tmp_dir)
+#     return hulls
+
+if __name__ == "__main__":
+    main()
+    path = Path(__file__).parent / "config.yaml"
+    config = load_config(path.as_posix())

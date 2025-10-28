@@ -66,7 +66,10 @@ class Guidewire(BaseGuidewire):
         Args:
             n_bodies (int): Number of bodies to add to the guidewire
         """
+        # print("n_bodies==",n_bodies)
         self._length = CYLINDER_HEIGHT * 2 + SPHERE_RADIUS * 2 + OFFSET * n_bodies
+        # print("self._length==",self._length)
+
         self._n_bodies = n_bodies
 
         self._mjcf_root = mjcf.RootElement(model="guidewire")
@@ -81,14 +84,16 @@ class Guidewire(BaseGuidewire):
 
     def _set_defaults(self):
         """Set the default values for the guidewire."""
+        # 为所有geom设置默认属性（从YAML读取）
         self._mjcf_root.default.geom.set_attributes(
-            size=[SPHERE_RADIUS, CYLINDER_HEIGHT],
-            **guidewire_default["geom"],
+            size=[SPHERE_RADIUS, CYLINDER_HEIGHT],  # 计算得到的尺寸
+            **guidewire_default["geom"]  # 展开YAML中的geom参数（如group、friction等）
         )
 
+        # 为所有joint设置默认属性
         self._mjcf_root.default.joint.set_attributes(
-            pos=[0, 0, -OFFSET / 2],
-            **guidewire_default["joint"],
+            pos=[0, 0, -OFFSET / 2],  # 位置偏移
+            **guidewire_default["joint"]  # 展开YAML中的joint参数（如type、stiffness等）
         )
 
         self._mjcf_root.default.site.set_attributes(
@@ -105,8 +110,17 @@ class Guidewire(BaseGuidewire):
         parent = self._mjcf_root.worldbody.add(
             "body",
             name="guidewire_body_0",
-            euler=[-math.pi / 2, 0, math.pi],
-            pos=[0, -(self._length - 0.015), 0],
+            # euler=[-math.pi / 2, 0, math.pi], # 修改导丝的初始朝向
+            # euler=[80, 40, 55],
+            # euler=[-1.2, 0.01, 1.57],   # 指向 +Y
+            # euler=[-1, 0.1, 1.57],   # 指向 +Y----
+            euler=[-1.1, 0.1, 2.2],   # 指向 +Y
+            # pos=[0, -(self._length)+0.04, -0.11],
+            # pos=[-0.018, -(self._length)+0.035, -0.11],------
+            pos=[-0.018, -(self._length)+0.035, -0.09],
+
+
+
         )
         parent.add(
             "geom",

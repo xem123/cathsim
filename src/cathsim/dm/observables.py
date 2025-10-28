@@ -54,6 +54,7 @@ class CameraObservable(MujocoCamera):
         """
 
         def get_image():
+            # print("self._camera_name======",self._camera_name)
             image = physics.render(
                 self._height,
                 self._width,

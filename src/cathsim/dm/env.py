@@ -107,12 +107,43 @@ class Scene(composer.Arena):
         self._mjcf_root.option.flag.set_attributes(**OPTION_FLAG)
         self._mjcf_root.default.site.set_attributes(**DEFAULT_SITE)
 
+    # def _add_cameras(self):
+    #     """Add cameras to the scene."""
+    #     self.top_camera = self.add_camera(
+    #         "top_camera",
+    #         # [-0.03, 0.125, 0.25],# ori
+    #         # [0.17, -0.13, 0.6 ] quat=[1, 0, 0, 0]时不错
+    #         # [-0.22, -0.1, 0.13],quat=[0.5, 0.5, -0.5, -0.5]]时不错
+    #         #[0.0, -0.15, 0.08],quat=[0.5, 0.5, -0.5, -0.5]]时不错！！！血管放大
+    #         [0.0, -0.15, 0.08],
+    #         # quat=[1, 0, 0, 0], # x减小物体向下，x增大物体向左移动，y降低物体向上，z减小物体放大
+    #         quat=[0.5, 0.5, -0.5, -0.5],# x减小物体缩小，y增大物体向右移动，z减小物体向上
+    #     )
+    #     # self.top_camera_close = self.add_camera(
+    #     #     "top_camera_close",
+    #     #     [-0.03, 0.125, 0.065],
+    #     #     quat=[1, 0, 0, 0],
+    #     # )
+    #     self.top_camera_close = self.add_camera(
+    #         "top_camera_close",
+    #         [-10.03, 10.125, 10.065],
+    #         quat=[-1, 0, 0, 0],
+    #     )
+    #     self.side_camera = self.add_camera(
+    #         "side", [-0.22, 0.105, 0.03], quat=[0.5, 0.5, -0.5, -0.5]
+    #     )
+    #     # self.side_camera = self.add_camera(
+    #     #     "side", [-0.22, 0.105, 0.03], quat=[5, 5, 5, 5]
+    #     # )
     def _add_cameras(self):
         """Add cameras to the scene."""
         self.top_camera = self.add_camera(
             "top_camera",
-            [-0.03, 0.125, 0.25],
-            quat=[1, 0, 0, 0],
+            # [-0.03, 0.125, 0.25],
+            [-0.008, 0.08, 0.3], #x增大物体向左，y增大物体向下
+            # [0.0, 0.0, 0.25],
+            quat=[1, 0, 0, 0], # x减小物体向下，x增大物体向左移动，y降低物体向上，z减小物体放
+
         )
         self.top_camera_close = self.add_camera(
             "top_camera_close",
@@ -122,6 +153,7 @@ class Scene(composer.Arena):
         self.side_camera = self.add_camera(
             "side", [-0.22, 0.105, 0.03], quat=[0.5, 0.5, -0.5, -0.5]
         )
+
 
     def _add_assets_and_lights(self):
         """Add assets and lights to the scene."""
@@ -212,15 +244,21 @@ class UniformSphere(variation.Variation):
         distributed within the sphere, not just on its surface.
     """
 
-    def __init__(self, radius: float = 0.001):
+    #def __init__(self, radius: float = 0.001):
+    def __init__(self, radius: float = 0.001, fixed_pos: Optional[tuple] = None):
         """Uniformly sample a point on a sphere.
 
         Args:
             radius (float): Radius of the sphere ( default : 0.001 )
         """
         self._radius = radius
+        self.fixed_pos = fixed_pos  # 新增参数：固定位置
+
 
     def __call__(self, initial_value=None, current_value=None, random_state=None):
+        # 如果指定了固定位置，则使用固定位置
+        if self.fixed_pos is not None:
+            return self.fixed_pos
         theta = 2 * math.pi * random.random()
         phi = math.acos(2 * random.random() - 1)
         r = self._radius * (random.random() ** (1 / 3))
@@ -252,6 +290,22 @@ class Navigate(composer.Task):
         target_from_sites: If True, the target will be sampled from sites ( default : True )
         random_init_distance: The distance from the center to sample the initial pose ( default : 0.001 )
         target: The target to use. Can be a string or a numpy array ( default : None )
+
+        phantom: 要使用的血管幻影实体
+        guidewire: 要使用的导丝实体
+        tip: 尖端使用的尖端实体（默认: None）
+        delta: 成功奖励的最小距离阈值（默认: 0.004）
+        dense_reward: 若为True，奖励为到目标的距离（默认: True）
+        success_reward: 成功奖励（默认: 10.0）
+        use_pixels: 在观测中添加像素图像（默认: False）
+        use_segment: 在观测中添加导丝分割图像（默认: False）
+        use_phantom_segment: 在观测中添加幻影分割图像（默认: False）
+        image_size: 图像尺寸（默认: 80）
+        sample_target: 是否随机采样目标（默认: False）
+        visualize_sites: 若为True，将渲染标记点（默认: False）
+        target_from_sites: 若为True，将从标记点中采样目标（默认: True）
+        random_init_distance: 采样初始位姿时距中心的距离（默认: 0.001）
+        target: 要使用的目标，可为字符串或numpy数组（默认: None）
     """
 
     def __init__(
@@ -270,9 +324,11 @@ class Navigate(composer.Task):
         apply_fluid_force: bool = False,
         sample_target: bool = False,
         visualize_sites: bool = False,
-        visualize_target: bool = False,
+        #visualize_target: bool = False,
+        visualize_target: bool = True,
         target_from_sites: bool = True,
         random_init_distance: float = 0.001,
+        #random_init_distance: float = 100,
         target: Union[str, np.ndarray] = None,
     ):
         self.delta = delta
@@ -301,9 +357,8 @@ class Navigate(composer.Task):
 
         self.control_timestep = env_config["num_substeps"] * self.physics_timestep
         self.success = False
-        self.camera_matrix = self.get_camera_matrix(
-            image_size=self.image_size, camera_name="top_camera"
-        )
+        self.camera_matrix = self.get_camera_matrix(image_size=self.image_size, camera_name="top_camera")
+        # self.camera_matrix = self.get_camera_matrix(image_size=self.image_size, camera_name="side")
         self.set_target(target)
 
     def __del__(self):
@@ -326,20 +381,37 @@ class Navigate(composer.Task):
             guidewire (composer.Entity): The guidewire entity to use
             tip (composer.Entity): The tip entity to use for the tip
         """
+        """设置场景和实体附着
+                该方法负责创建场景并将实体附着到场景中
+                参数:
+                    phantom (composer.Entity): 要使用的血管幻影实体
+                    guidewire (composer.Entity): 要使用的导丝实体
+                    tip (composer.Entity): 尖端使用的尖端实体
+                """
         self._arena = Scene("arena")
         self._phantom = phantom or composer.Entity()
-        self._arena.attach(self._phantom)
+        self._arena.attach(self._phantom)# 将血管幻影的 MJCF 模型挂载到场景根节点；其几何参数（如血管的路径、半径）会作为静态环境的碰撞边界，影响导丝的运动约束
 
         if guidewire is not None:
             self._guidewire = guidewire
-            self._arena.attach(self._guidewire)
+            self._arena.attach(self._guidewire) # 将导丝挂载到场景，其关节参数（如每段的旋转范围）会决定导丝的运动自由度；
             if tip is not None:
                 self._tip = tip
-                self._guidewire.attach(self._tip)
+                self._guidewire.attach(self._tip) # 将尖端挂载到导丝末端，其参数（如尖端半径、质量）会影响整体的碰撞检测和运动惯性；
 
     def _configure_poses_and_variators(self):
         """Setup the initial poses and variators."""
         self._guidewire_initial_pose = UniformSphere(radius=self.random_init_distance)
+        # 传入固定位置 (0.001, 0.002, 0.000)（单位：米）
+        # self._guidewire_initial_pose = UniformSphere(
+        #     radius=self.random_init_distance,
+        #     # fixed_pos=(-0.035, -0.10, 0.03)  # 固定导丝初始位置
+        #     fixed_pos=(0, 0, -0.07)  # 固定导丝初始位置
+
+        # )
+        self._guidewire_initial_pose = UniformSphere(  # 原始代码，初始化导丝空间位置
+            radius=self.random_init_distance
+        )
         self._mjcf_variator = variation.MJCFVariator()
         self._physics_variator = variation.PhysicsVariator()
 
@@ -350,13 +422,24 @@ class Navigate(composer.Task):
 
         self._task_observables = {}
 
-        if self.use_pixels:
+        # print("self.use_pixels = ",self.use_pixels) # True
+        # print("self.use_side = ",self.use_side) # False
+        # print("self.use_segment = ",self.use_segment) # True
+        # print("self.use_phantom_segment = ",self.use_phantom_segment) # False
+
+        if self.use_pixels:# True
             self._task_observables["pixels"] = CameraObservable(
                 camera_name="top_camera",
                 width=self.image_size,
                 height=self.image_size,
             )
-            if self.use_side:
+            # self._task_observables["pixels"] = CameraObservable(
+            #     camera_name="side",
+            #     width=self.image_size,
+            #     height=self.image_size,
+            # )
+            if self.use_side:# False
+                # print("if self.use_side-------")
                 guidewire_option = make_scene([1, 2])
                 self._task_observables["side"] = CameraObservable(
                     camera_name="side",
@@ -366,7 +449,7 @@ class Navigate(composer.Task):
                     segmentation=True,
                 )
 
-        if self.use_segment:
+        if self.use_segment:# True
             guidewire_option = make_scene([1, 2])
 
             self._task_observables["guidewire"] = CameraObservable(
@@ -376,8 +459,16 @@ class Navigate(composer.Task):
                 scene_option=guidewire_option,
                 segmentation=True,
             )
+            # self._task_observables["guidewire"] = CameraObservable(
+            #     camera_name="side",
+            #     height=self.image_size,
+            #     width=self.image_size,
+            #     scene_option=guidewire_option,
+            #     segmentation=True,
+            # )
 
-        if self.use_phantom_segment:
+        if self.use_phantom_segment:# False
+            print("if self.use_phantom_segment-------")
             phantom_option = make_scene([0])
             self._task_observables["phantom"] = CameraObservable(
                 camera_name="top_camera",
@@ -433,6 +524,8 @@ class Navigate(composer.Task):
                     pos=target,
                     size=[0.003],
                     rgba=[1, 0, 0, 1],
+                    # size=[3],
+                    # rgba=[0, 1, 0, 1],
                 )
             else:
                 self.target_site.pos = target
@@ -460,46 +553,46 @@ class Navigate(composer.Task):
 
     def get_reward(self, physics):
         """Get the reward from the environment."""
-        self.head_pos = self.get_head_pos(physics)
+        self.head_pos = self.get_head_pos(physics)  # 获取导管尖端位置
 
-        d = distance(self.head_pos, self.target_pos)
-        is_successful = d < self.delta
+        d = distance(self.head_pos, self.target_pos)  # 计算与目标的距离
+        is_successful = d < self.delta  # 是否达到目标（阈值 delta）
 
-        # Calculate reward based on success and reward type
+        # 根据 dense_reward 标志决定奖励类型
         if self.dense_reward:
             reward = self.success_reward if is_successful else -d
         else:
             reward = self.success_reward if is_successful else -1.0
 
-        self.success = is_successful
+        self.success = is_successful  # 更新成功状态
         return reward
 
     def should_terminate_episode(self, physics):
-        """Check if the episode should terminate."""
-        return self.success
+        """检查回合是否应终止"""
+        return self.success  # 若成功则终止回合
 
     def get_head_pos(self, physics):
-        """Get the position of the head of the guidewire."""
-        return physics.named.data.geom_xpos[-1]
+        """获取导丝头部的位置"""
+        return physics.named.data.geom_xpos[-1]  # 返回最后一个几何体（尖端）的位置
 
     def get_target_pos(self, physics):
-        """Get the position of the target."""
-        return self.target_pos
+        """获取目标位置"""
+        return self.target_pos  # 返回目标位置
 
     def get_joint_positions(self, physics):
-        """Get the joint positions."""
-        positions = physics.named.data.qpos
+        """获取关节位置"""
+        positions = physics.named.data.qpos  # 从物理引擎获取关节位置
         return positions
 
     def get_joint_velocities(self, physics):
-        """Get the joint velocities."""
-        velocities = physics.named.data.qvel
+        """获取关节速度"""
+        velocities = physics.named.data.qvel  # 从物理引擎获取关节速度
         return velocities
 
     def get_total_force(self, physics):
-        """Get the force magnitude."""
-        forces = physics.data.qfrc_constraint[0:3]
-        forces = np.linalg.norm(forces)
+        """获取力的大小"""
+        forces = physics.data.qfrc_constraint[0:3]  # 获取约束力的前3个分量
+        forces = np.linalg.norm(forces)  # 计算力的模长
         return forces
 
     def get_contact_forces(
@@ -510,19 +603,26 @@ class Navigate(composer.Task):
         image_size: int = 80,
     ) -> dict:
         """Get the contact forces for each contact.
-
         Get the contact forces for each contact. The contact forces are filtered
         by a threshold and converted to pixels if needed.
-
         Args:
             physics (engine.Physics): A dm_control physics object
             threshold (float): The threshold to filter the forces ( default : 0.01 )
             to_pixels (bool): Convert the forces to pixels ( default : True )
             image_size (int): The size of the image ( default : 80 )
-
         Returns:
             dict: A dictionary containing the positions and forces
-        """
+
+            获取每个接触点的接触力
+                获取每个接触点的接触力，接触力会通过阈值过滤，必要时转换为像素坐标
+                参数:
+                    physics (engine.Physics): dm_control物理引擎对象
+                    threshold (float): 力的过滤阈值（默认: 0.01）
+                    to_pixels (bool): 是否将位置转换为像素坐标（默认: True）
+                    image_size (int): 图像尺寸（默认: 80）
+                返回:
+                    dict: 包含位置和力的字典
+                """
         data = physics.data
         forces = {"pos": [], "force": []}
 
@@ -542,7 +642,9 @@ class Navigate(composer.Task):
         self,
         image_size: Optional[int] = None,
         camera_name: str = "top_camera",
+        # camera_name: str = "side",
     ) -> np.ndarray:
+        """获取相机矩阵（用于3D点到2D像素的转换）"""
         cameras = self._arena.mjcf_model.find_all("camera")
         camera = next((cam for cam in cameras if cam.name == camera_name), None)
 
@@ -561,7 +663,7 @@ class Navigate(composer.Task):
         return camera_matrix
 
     def get_phantom_mask(self, physics, image_size: int = None, camera_id=0):
-        """Get the phantom mask."""
+        """Get the phantom mask.""""""获取血管幻影的分割掩码"""
         scene_option = make_scene([0])
         if image_size is None:
             image_size = self.image_size
@@ -575,7 +677,7 @@ class Navigate(composer.Task):
         return mask
 
     def get_guidewire_mask(self, physics, image_size: int = None, camera_id=0):
-        """Get the guidewire mask."""
+        """Get the guidewire mask.""""""获取导丝的分割掩码"""
         scene_option = make_scene([1, 2])
         if image_size is None:
             image_size = self.image_size
@@ -589,7 +691,7 @@ class Navigate(composer.Task):
         return mask
 
     def get_random_target(self, physics):
-        """Get a random target based on conditions."""
+        """Get a random target based on conditions.""""""基于条件随机获取目标"""
 
         # If targets are fetched from predefined sites
         if self.target_from_sites:
@@ -626,7 +728,17 @@ def make_dm_env(
 
     phantom = Phantom(phantom + ".xml")
     tip = Tip(n_bodies=4)
-    guidewire = Guidewire(n_bodies=80)
+    # guidewire = Guidewire(n_bodies=80)
+    guidewire = Guidewire(n_bodies=100)
+    # # 打印Tip的详细信息
+    # print("===== Tip 详细信息 =====")
+    # # 打印MJCF模型的XML结构
+    # print(tip.mjcf_model.to_xml_string())
+    # # 打印Guidewire的详细信息
+    # print("\n===== Guidewire 详细信息 =====")
+    # # 打印MJCF模型的XML结构
+    # print(guidewire.mjcf_model.to_xml_string())
+
     task = Navigate(
         phantom=phantom,
         guidewire=guidewire,

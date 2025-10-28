@@ -6,7 +6,8 @@ import numpy as np
 from cathsim.dm import make_dm_env
 from dm_env import specs
 from gymnasium.envs.registration import EnvSpec
-
+import os
+from PIL import Image
 
 def convert_spec_to_gym_space(dm_control_space: specs) -> gym.spaces:
     if isinstance(dm_control_space, specs.BoundedArray):
@@ -55,12 +56,13 @@ class CathSim(gym.Env):
         dm_env=None,
         **kwargs,
     ):
-        self.spec = EnvSpec("cathsim/CathSim-v0", max_episode_steps=300)
+        # self.spec = EnvSpec("cathsim/CathSim-v0", max_episode_steps=300)
+        self.spec = EnvSpec("cathsim/CathSim-v0", max_episode_steps=600)
 
         self.dm_env = dm_env
         if self.dm_env is None:
             self._env = make_dm_env(phantom=phantom, **kwargs)
-        else:
+        else:# None!!!
             self._env = self.dm_env
 
         self.metadata = {
@@ -112,10 +114,47 @@ class CathSim(gym.Env):
         obs = self._get_obs(timestep)
         return obs, {}
 
+    
+    
     def step(self, action: np.ndarray) -> tuple:
-        timestep = self._env.step(action)
+        def save_image(image_data: np.ndarray, file_path: str):
+            """
+            image_data: (H, W, C) 或 (H, W)
+            C=1 或 C=3，dtype=uint8
+            """
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
+            # 去掉尾部长度为1的通道
+            if image_data.ndim == 3 and image_data.shape[-1] == 1:
+                image_data = image_data.squeeze(-1)
+
+            # 现在 shape 只能是 (H,W) 或 (H,W,3)
+            if image_data.ndim not in (2, 3):
+                raise ValueError(f"不支持的形状 {image_data.shape}")
+
+            img = Image.fromarray(image_data.astype(np.uint8))
+            img.save(file_path)
+        
+        
+        timestep = self._env.step(action)
         observation = self._get_obs(timestep)
+        # 若是字典类型，打印键值：单进程时控制台可见；多进程时只在 rank-0 打印
+        #if isinstance(observation, dict):
+            #print("观测值包含的键:", list(observation.keys()))  # ['guidewire', 'joint_pos', 'joint_vel', 'pixels']
+            #for key, value in observation.items():
+            	#print(f"{key} 形状: {value.shape if hasattr(value, 'shape') else type(value)}")
+	    #保存pixels和guidewire为图像
+        if 'pixels' in observation:
+            pixels = observation['pixels']
+            pixel_path = f"/home/xingenming/Downloads/cathsim/data/pixel.png"
+            save_image(pixels, pixel_path)
+            
+	    # 保存pixels
+            #for i in range(pixels.shape[2]):
+             #   pixel_image = pixels[:,:,i]
+             #   pixel_path = f"/home/xingenming/Downloads/cathsim/data/pixel_{i}.png"
+              #  save_image(pixel_image, pixel_path)
+        # print("observation",observation)
         reward = timestep.reward
         terminated = timestep.last()
         truncated = False

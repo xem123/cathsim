@@ -1,16 +1,19 @@
-scale: 1
-rgba: [0, 0, 0, 1]
-diameter: 0.001
-stiffness: 20
-sphere_to_cylinder_ratio: 1.5
-condim: 1
-spring: 0.05
-force: 300
-stretch: false
-twist: false
-friction: [.1]  # default: [1, 0.005, 0.0001]
-tip_n_bodies: 2
-density: 6.72e+2  # nitiol density  # 7980,
+scale: 1  # 整体缩放系数	1 表示不缩放；>1 变粗变长，<1 变细变短
+rgba: [0, 0, 0, 1]  # 颜色与透明度	黑色 [0,0,0,1]，alpha=1 表示不透明
+diameter: 0.001  # 导丝圆柱段直径（单位：米）
+stiffness: 2
+sphere_to_cylinder_ratio: 1.5  #球头与圆柱长度比
+condim: 1  #接触维：1 表示仅支持法向接触（无摩擦），2/3 增加切向/扭转
+# condim: 3 # 接触维度：3 = 法向+切向+扭转
+
+spring: 0.05  #弹性系数	0.05 较小，提供轻微回弹力
+force: 100  #最大驱动力（N）	300 N 非常大，足以推动导丝前进
+stretch: false  # 是否允许拉伸	false 表示刚体长度固定
+twist: false  #是否允许扭转	false 表示忽略扭转自由度
+friction: [.1]  # default: [1, 0.005, 0.0001] 摩擦系数：0.1 较低，模拟光滑导丝表面；可增大以增强阻力感
+# friction: [.5]  # default: [1, 0.005, 0.0001] 摩擦系数：0.1 较低，模拟光滑导丝表面；可增大以增强阻力感
+tip_n_bodies: 2 # 导丝尖端段数
+density: 6.72e+2  # nitiol density  # 7980,   密度（kg/m³）	6.72×10² ≈ 672 kg/m³，接近镍钛合金（nitiol）密度
 
 default:
   geom:
@@ -19,7 +22,10 @@ default:
     rgba: [0.2, 0.2, 0.2, 1]
     density: 6.72e+2
     condim: 1
+    # condim: 3 # 接触维度：3 = 法向+切向+扭转
+
     friction: [.1]
+    # friction: [0.5, 0.1, 0.001]   # 摩擦系数三元组	a=滑动摩擦，b=扭转摩擦，c=滚动摩擦
     fluidshape: ellipsoid
   joint:
     type: hinge
@@ -27,13 +33,14 @@ default:
     springref: 0
     armature: 0.05
     axis: [0, 0, 1]
-    stiffness: 20
+    stiffness: 2 # 关节刚度（N·m/rad）	20 表示较硬；值越大越难弯曲，越小越柔软
   site:
     type: sphere
     rgba: [0.3, 0, 0, 0]
   velocity:
-    ctrlrange: [-1, 1]
-    forcerange: [-300, 300]
-    kv: 5
+    ctrlrange: [-1, 1]   #控制输入范围	[-1, 1] 归一化输入，内部映射到实际力/速度
+    # forcerange: [-300, 300]  # 实际输出力范围	[-300, 300] N，与 force 对应
+    forcerange: [-100, 100]  # 实际输出力范围	[-300, 300] N，与 force 对应
 
+    kv: 5  # 速度增益	5 控制速度响应，越大越快到达目标速度
 
