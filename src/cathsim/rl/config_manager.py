@@ -25,16 +25,16 @@ class Config:
         self.config_name = "default"
 
         self.task_kwargs = dict(
-            # image_size=80,
-            image_size=250,
+            image_size=80,
+            # image_size=250,
             phantom="phantom3",
             target="bca",
         )
         self.task_kwargs = dict(
             use_pixels=True,
             use_segment=False,
-            # image_size=80,
-            image_size=250,
+            image_size=80,
+            # image_size=250,
             phantom="phantom3",
             target="bca",
             random_init_distance=1e-3,
@@ -51,8 +51,8 @@ class Config:
         )
 
         self.algo_kwargs = dict(
-            # buffer_size=int(5e5), # 62500
-            buffer_size=int(10000),
+            buffer_size=int(5e5), # 62500
+            # buffer_size=int(5000),
             policy="MultiInputPolicy",
             policy_kwargs=dict(
                 features_extractor_class=CustomExtractor,

@@ -31,34 +31,34 @@ ALGOS = {
 #             print(f"[{self.num_timesteps}] action = {action[0].tolist()}")
 #         return True
 
-class IOCallback(BaseCallback):
-    def __init__(self, log_dir, freq=1000):
-        super().__init__()
-        self.freq = freq
-        self.log_file = os.path.join(log_dir, "train_actions.csv")
-        with open(self.log_file, "w") as f:
-            f.write("step,pixels_shape,guidewire_shape,joint_pos_shape,joint_vel_shape,a0,a1\n")
-
-    def _on_step(self):
-        if self.num_timesteps % self.freq == 0:
-            obs = self.locals.get("obs") or self.locals.get("new_obs")
-            #print("obs['pixels'].shape", obs['pixels'].shape)
-            #print("obs['guidewire'].shape", obs['guidewire'].shape)
-            #print("obs['joint_pos'].shape", obs['joint_pos'].shape)
-            #print("obs['joint_pos']",obs['joint_pos'])
-            #print("obs['joint_vel'].shape", obs['joint_vel'].shape)
-            #print("obs['joint_vel']",obs['joint_vel'])
-            action, _ = self.model.predict(obs, deterministic=False)
-            with open(self.log_file, "a") as f:
-                f.write(f"{self.num_timesteps},"
-                        f"{obs['pixels'].shape},"
-                        f"{obs['guidewire'].shape},"
-                        # f"{obs['joint_pos'].shape},"
-                        # f"{obs['joint_vel'].shape},"
-                        f"{obs['joint_pos']},"
-                        f"{obs['joint_vel']},"
-                        f"{action[0,0]:.4f},{action[0,1]:.4f}\n")
-        return True
+# class IOCallback(BaseCallback):
+#     def __init__(self, log_dir, freq=1000):
+#         super().__init__()
+#         self.freq = freq
+#         self.log_file = os.path.join(log_dir, "train_actions.csv")
+#         with open(self.log_file, "w") as f:
+#             f.write("step,pixels_shape,guidewire_shape,joint_pos_shape,joint_vel_shape,a0,a1\n")
+#
+#     def _on_step(self):
+#         if self.num_timesteps % self.freq == 0:
+#             obs = self.locals.get("obs") or self.locals.get("new_obs")
+#             #print("obs['pixels'].shape", obs['pixels'].shape)
+#             #print("obs['guidewire'].shape", obs['guidewire'].shape)
+#             #print("obs['joint_pos'].shape", obs['joint_pos'].shape)
+#             #print("obs['joint_pos']",obs['joint_pos'])
+#             #print("obs['joint_vel'].shape", obs['joint_vel'].shape)
+#             #print("obs['joint_vel']",obs['joint_vel'])
+#             action, _ = self.model.predict(obs, deterministic=False)
+#             with open(self.log_file, "a") as f:
+#                 f.write(f"{self.num_timesteps},"
+#                         # f"{obs['pixels'].shape},"
+#                         # f"{obs['guidewire'].shape},"
+#                         # # f"{obs['joint_pos'].shape},"
+#                         # # f"{obs['joint_vel'].shape},"
+#                         # f"{obs['joint_pos']},"
+#                         # f"{obs['joint_vel']},"
+#                         f"{action[0,0]:.4f},{action[0,1]:.4f}\n")
+#         return True
 
 def generate_experiment_paths(experiment_path: Path = None) -> tuple:
     if experiment_path.is_absolute() is False:
@@ -71,6 +71,29 @@ def generate_experiment_paths(experiment_path: Path = None) -> tuple:
         directory_path.mkdir(parents=True, exist_ok=True)
     return model_path, log_path, eval_path
 
+from stable_baselines3.common.callbacks import BaseCallback
+import time
+class ProgressCallback(BaseCallback):
+    def __init__(self, check_freq: int = 1000, verbose: int = 1):
+        super(ProgressCallback, self).__init__(verbose)
+        self.check_freq = check_freq
+        self.start_time = time.time()
+
+    def _on_step(self) -> bool:
+        if self.n_calls % self.check_freq == 0:
+            # 计算训练时间
+            elapsed_time = time.time() - self.start_time
+            hours = int(elapsed_time // 3600)
+            minutes = int((elapsed_time % 3600) // 60)
+            seconds = int(elapsed_time % 60)
+
+            # 打印进度信息
+            print(f"\n=== 训练进度 ===")
+            print(f"总步数: {self.num_timesteps}")
+            print(f"已训练时间: {hours:02d}:{minutes:02d}:{seconds:02d}")
+            print(f"平均步数/秒: {self.num_timesteps / elapsed_time:.2f}")
+
+        return True
 
 def train(
     algo: str,
@@ -80,7 +103,7 @@ def train(
     trial_name: str = "test2",
     base_path: Path = RESULTS_PATH,
     n_timesteps: int = 600_000,
-    n_runs: int = 4,
+    n_runs: int = 2,
     evaluate: bool = False,
     n_envs: int = None,
 ) -> None:
@@ -112,7 +135,7 @@ def train(
             target=target,
         ),
     )
-    print(config)
+    print('config===',config)
     # {'algo_kwargs': {'buffer_size': 500000,
     #                  'device': 'cuda',
     #                  'policy': 'MultiInputPolicy',
@@ -181,7 +204,9 @@ def train(
             reset_num_timesteps=False,
             tb_log_name=f"{algo}_{seed}",
             log_interval=10,
-            callback=IOCallback(log_path),
+            # callback=IOCallback(log_path),
+            callback=ProgressCallback(check_freq=5000),  # 每1000步打印一次
+
         )
         # 训练完成后，将模型保存到指定路径
         model.save(model_path / f"{algo}_{seed}")

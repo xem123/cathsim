@@ -29,9 +29,9 @@ def cmd_visualize_agent(args=None):
     parser = ap.ArgumentParser()  # 创建命令行参数解析器
     # 定义可视化相关参数
     parser.add_argument("--config", type=str, default="full")  # 配置名称（默认"full"）
-    parser.add_argument("--base-path", type=str, default="data/results")  # 结果存储基础路径（默认"results"）
-    parser.add_argument("--trial", type=str, default="2")  # 试验名称（默认"1"）
-    parser.add_argument("--phantom", type=str, default="artery_0911_move_rotate_x270_high_000")  # 虚拟模型名称（默认"phantom3"）
+    parser.add_argument("--base-path", type=str, default="results")  # 结果存储基础路径（默认"results"）
+    parser.add_argument("--trial", type=str, default="test-trial")  # 试验名称（默认"1"）
+    parser.add_argument("--phantom", type=str, default="phantom3")  # 虚拟模型名称（默认"phantom3"）
     parser.add_argument("--target", type=str, default="bca")  # 目标位置（默认"bca"）
     # parser.add_argument("--seed", type=int, default=None)  # 随机种子（默认None，不指定）
     parser.add_argument("--seed", type=int, default=0)  # 随机种子（默认None，不指定，设置为1则运行训练过程中保存好的sac_1.zip模型）
@@ -94,6 +94,7 @@ def cmd_visualize_agent(args=None):
 
     # 运行10个episode（轮次）可视化
     for episode in range(10):
+        numm = 0
         obs = env.reset()  # 重置环境，获取初始观测
         #print("Type of obs:", type(obs))
         #print("Type of obs[0]:", type(obs[0]) if isinstance(obs, tuple) else "not tuple")
@@ -108,20 +109,24 @@ def cmd_visualize_agent(args=None):
 
         # 单轮episode循环（直到任务完成）
         while not done:
+            numm+=1
+            if numm>=600:
+                break
+            print("numm====",numm)
             #action, _states = model.predict(obs)  # 模型根据观测预测动作
             
             action, _ = model.predict(obs)
-            print("action===",action)  # [ 0.9916568  -0.85608953]
+            # print("action===",action)  # [ 0.9916568  -0.85608953]
 
             
             # obs, reward, done, info = env.step(action)  # 环境执行动作，返回新状态
             obs, reward, done, truncated, info = env.step(action)  # 环境执行动作，返回新状态
             # input("wait") #用回车控制一步一步走
             # print("obs ======", obs)
-            print("reward ======", reward)
+            # print("reward ======", reward)
             #print("done ======", done)
             #print("truncated ======", truncated)
-            print("info ======", info)
+            # print("info ======", info)
             rewards.append(reward)  # 记录奖励
             # 渲染图像并处理
             # image = env.render("rgb_array", image_size=480)  # 渲染RGB图像（尺寸480）
@@ -184,8 +189,8 @@ def cmd_run_env(args=None):
     ap = ArgumentParser()  # 创建解析器
     # 定义环境运行参数
     ap.add_argument("--interact", type=bool, default=True)  # 是否交互（默认True）
-    # ap.add_argument("--phantom", default="phantom3", type=str)  # 虚拟模型（默认"phantom3"）
-    ap.add_argument("--phantom", default="artery_0911_move_rotate_x270_high", type=str)  # 虚拟模型（默认"phantom3"）
+    ap.add_argument("--phantom", default="phantom3", type=str)  # 虚拟模型（默认"phantom3"）
+    # ap.add_argument("--phantom", default="artery_0916_move_rotate_x270", type=str)  # 虚拟模型（默认"phantom3"）
     # ap.add_argument("--phantom", default="artery_surface_move_rotate_x270", type=str)  # 虚拟模型（默认"phantom3"）
     ap.add_argument("--target", default="bca", type=str)  # 目标位置（默认"bca"）
     ap.add_argument("--image_size", default=80, type=int)  # 图像尺寸（默认80）
@@ -200,7 +205,7 @@ def cmd_run_env(args=None):
         use_segment=True,  # 使用分割图像
         target=args.target,  # 目标位置
         visualize_sites=False,  # 不可视化关键位置
-        # visualize_target=args.visualize_target,  # 是否可视化目标
+        visualize_target=args.visualize_target,  # 是否可视化目标
     )
 
     # 1) 打印观测空间
@@ -235,7 +240,6 @@ def cmd_run_env(args=None):
     print('top_camera pos :', pos)
     print('top_camera quat:', quat)
 
-
     launch(env)  # 启动环境（进入交互或运行模式）
 
 
@@ -245,7 +249,7 @@ def cmd_train(args=None):
     parser = ap.ArgumentParser()  # 创建参数解析器
     # 定义训练相关参数
     parser.add_argument("-a", "--algo", type=str, default="sac")  # 算法（默认"sac"）
-    parser.add_argument("-c", "--config", type=str, default="test")  # 配置（默认"test"）
+    parser.add_argument("-c", "--config", type=str, default="full")  # 配置（默认"test"）
     parser.add_argument("-t", "--target", type=str, default="bca")  # 目标（默认"bca"）
     parser.add_argument("-p", "--phantom", type=str, default="phantom3")  # 虚拟模型（默认"phantom3"）
     # parser.add_argument("-p", "--phantom", type=str, default="artery0002_0829")  # 虚拟模型（默认"phantom3"）

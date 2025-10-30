@@ -1,6 +1,4 @@
-# scale: 1
-scale: 0.004
-
+scale: 1
 
 default:
   geom:
@@ -12,16 +10,3 @@ default:
     rgba: [0.8, 0.8, 0.8, 0]
     type: sphere
     size: [0.002]
-
-# default:
-#   geom:
-#     margin: 0.0 # 允许穿透的“皮肤厚度”
-#     rgba: [111, 18, 0, 0.3]
-#     group: 0
-#     condim: 3 # 接触维度：3 = 法向+切向+扭转
-#     friction: [0.5, 0.1, 0.001]  # 摩擦系数三元组	a=滑动摩擦，b=扭转摩擦，c=滚动摩擦
-
-#   site:
-#     rgba: [0.8, 0.8, 0.8, 0]
-#     type: sphere
-#     size: [0.002]

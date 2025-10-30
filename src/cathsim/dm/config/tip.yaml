@@ -5,15 +5,14 @@ default:
   geom:
     group: 2
     type: capsule
-    rgba: [.2, .2, .2, 1]
+#    rgba: [.2, .2, .2, 1]
+    rgba: [ 1, 0, 0, 1 ]
     density: 6.72e+2
     condim: 1
-    # condim: 3 # 接触维度：3 = 法向+切向+扭转
     friction: [.1]
-    # friction: [0.5, 0.1, 0.001]   # 摩擦系数三元组	a=滑动摩擦，b=扭转摩擦，c=滚动摩擦
     fluidshape: "ellipsoid"
   joint:
     type: hinge
-    stiffness: 2
+    stiffness: 1
     damping: 0.5
     armature: 0.05

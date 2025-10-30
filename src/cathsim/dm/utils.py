@@ -137,8 +137,8 @@ WRAPPERS = {
     "SingleDict2Array": (SingleDict2Array, {}),
     "NormalizeObservation": (wrappers.NormalizeObservation, {}),
     "FrameStack": (
-        # wrappers.FrameStack,
-        wrappers.FrameStackObservation,
+        wrappers.FrameStack,
+        # wrappers.FrameStackObservation,
         {"num_stack": lambda cfg: cfg["wrapper_kwargs"].get("frame_stack", 1)},
     ),
 }

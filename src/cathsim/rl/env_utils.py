@@ -104,10 +104,50 @@ def make_gym_env(
         # • 再包一层 gym.Wrapper → CathSim 的 Gym 接口
         env = gym.make("cathsim/CathSim-v0", **task_kwargs)
 
+        # # 2. 打印观测空间（observation_space）：模型输入的结构
+        # print("观测空间（observation_space）：")
+        # print(env.observation_space)
+        # # 若观测空间是字典格式（如之前分析的 Dict 类型），可进一步打印每个子空间
+        # if isinstance(env.observation_space, gym.spaces.Dict):
+        #     for key, space in env.observation_space.spaces.items():
+        #         print(f"  {key}: {space}")
+        # print("-" * 50)
+        #
+        # # 3. 打印动作空间（action_space）：模型输出的范围
+        # print("动作空间（action_space）：")
+        # print(env.action_space)
+        # # 若动作空间是 Box 类型，可查看其范围和维度
+        # if isinstance(env.action_space, gym.spaces.Box):
+        #     print(f"  维度：{env.action_space.shape}")
+        #     print(f"  最小值：{env.action_space.low}")
+        #     print(f"  最大值：{env.action_space.high}")
+        # print("-" * 100)
+
+
         # 观测过滤：只保留想要的键
         env = apply_filter_observation(
             env, filter_keys=wrapper_kwargs.get("use_obs", [])
         )
+
+        # # 2. 打印观测空间（observation_space）：模型输入的结构
+        # print("观测空间（observation_space）：")
+        # print(env.observation_space)
+        # # 若观测空间是字典格式（如之前分析的 Dict 类型），可进一步打印每个子空间
+        # if isinstance(env.observation_space, gym.spaces.Dict):
+        #     for key, space in env.observation_space.spaces.items():
+        #         print(f"  {key}: {space}")
+        # print("-" * 50)
+        #
+        # # 3. 打印动作空间（action_space）：模型输出的范围
+        # print("动作空间（action_space）：")
+        # print(env.action_space)
+        # # 若动作空间是 Box 类型，可查看其范围和维度
+        # if isinstance(env.action_space, gym.spaces.Box):
+        #     print(f"  维度：{env.action_space.shape}")
+        #     print(f"  最小值：{env.action_space.low}")
+        #     print(f"  最大值：{env.action_space.high}")
+        # print("-" * 50)
+
         # 图像预处理包装器（仅当使用像素）
         env = apply_multi_input_image_wrapper(
             env,
@@ -143,47 +183,47 @@ def make_gym_env(
     if monitor_wrapper:
         env = Monitor(env) if n_envs == 1 else VecMonitor(env)
 
-    # 新增：测试打印观测值
-    print("\n=== 环境观测结构测试 ===")
-    obs = env.reset()
-    
-    # print("初始观测值:")
-    # print(obs)
-    print("观测值类型:", type(obs))#  <class 'dict'>
+    # # 新增：测试打印观测值
+    # print("\n=== 环境观测结构测试 ===")
+    # obs = env.reset()
+    #
+    # # print("初始观测值:")
+    # # print(obs)
+    # print("观测值类型:", type(obs))#  <class 'dict'>
+    #
+    # # 若是字典类型，打印键值：单进程时控制台可见；多进程时只在 rank-0 打印
+    # if isinstance(obs, dict):
+    #     print("观测值包含的键:", list(obs.keys()))  # ['guidewire', 'joint_pos', 'joint_vel', 'pixels']
+    #     for key, value in obs.items():
+    #         print(f"{key} 形状: {value.shape if hasattr(value, 'shape') else type(value)}")
+    #         # guidewire 形状: (32, 80, 80, 1),joint_pos 形状: (32, 168),joint_vel 形状: (32, 168),pixels 形状: (32, 80, 80, 3)
+    #         # print("value====",value)
+    #         print("像素值范围:", value.min(), value.max(), value.dtype)
+    #         # print("value.dtype==",value.dtype)
+    # # 保存pixels和guidewire为图像
+    # if 'pixels' in obs and 'guidewire' in obs:
+    #     pixels = obs['pixels']
+    #     guidewire = obs['guidewire']
+    #     # 保存pixels
+    #     for i in range(pixels.shape[0]):
+    #         pixel_image = pixels[i]
+    #         pixel_path = f"/home/xingenming/Downloads/cathsim/results/pixel_{i}.png"
+    #         save_image(pixel_image, pixel_path)
+    #     # 保存guidewire
+    #     for i in range(guidewire.shape[0]):
+    #         guidewire_image = guidewire[i]
+    #         guidewire_path = f"/home/xingenming/Downloads/cathsim/results/guidwire_{i}.png"
+    #         save_image(guidewire_image, guidewire_path)
+    # print("save png success----------------")
 
-    # 若是字典类型，打印键值：单进程时控制台可见；多进程时只在 rank-0 打印
-    if isinstance(obs, dict):
-        print("观测值包含的键:", list(obs.keys()))  # ['guidewire', 'joint_pos', 'joint_vel', 'pixels']
-        for key, value in obs.items():
-            print(f"{key} 形状: {value.shape if hasattr(value, 'shape') else type(value)}")
-            # guidewire 形状: (32, 80, 80, 1),joint_pos 形状: (32, 168),joint_vel 形状: (32, 168),pixels 形状: (32, 80, 80, 3)
-            # print("value====",value)
-            print("像素值范围:", value.min(), value.max(), value.dtype)
-            # print("value.dtype==",value.dtype)
-    # 保存pixels和guidewire为图像
-    if 'pixels' in obs and 'guidewire' in obs:
-        pixels = obs['pixels']
-        guidewire = obs['guidewire']
-        # 保存pixels
-        for i in range(pixels.shape[0]):
-            pixel_image = pixels[i]
-            pixel_path = f"/home/xingenming/Downloads/cathsim/results/pixel_{i}.png"
-            save_image(pixel_image, pixel_path)
-        # 保存guidewire
-        for i in range(guidewire.shape[0]):
-            guidewire_image = guidewire[i]
-            guidewire_path = f"/home/xingenming/Downloads/cathsim/results/guidwire_{i}.png"
-            save_image(guidewire_image, guidewire_path)
-    print("save png success----------------")
 
-
-    # 测试一步动作后的观测
-    if n_envs == 1:  # 单环境才测试
-        action = env.action_space.sample()  # 随机采样一个动作
-       # obs, reward, done, info = env.step(action)
-        bs, reward, done, truncated, info = env.step(action)
-        print("\n执行一步动作后的观测值:")
-        # print(obs)
+    # # 测试一步动作后的观测
+    # if n_envs == 1:  # 单环境才测试
+    #     action = env.action_space.sample()  # 随机采样一个动作
+    #    # obs, reward, done, info = env.step(action)
+    #     bs, reward, done, truncated, info = env.step(action)
+    #     print("\n执行一步动作后的观测值:")
+    #     # print(obs)
     # 返回一个符合Gymnasium API的gym.Env对象（可能是单进程，也可能是向量化多进程），其观测空间、动作空间和reset()/step()接口全部对齐Stable-Baselines3的约定
     # 单进程时是：Monitor(MultiInputImageWrapper(FilterObservation(CathSim(...))))
     # 多进程时是：VecMonitor(SubprocVecEnv([_create_env, _create_env, ..., _create_env]))

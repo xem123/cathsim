@@ -319,7 +319,8 @@ class Navigate(composer.Task):
         use_pixels: bool = False,
         use_side: bool = False,
         use_segment: bool = False,
-        use_phantom_segment: bool = False,
+        use_phantom_segment: bool = False, # 改为True，默认启用血管分割
+        use_tip_pos: bool = False,  # 新增：是否使用尖端坐标观测
         image_size: int = 80,
         apply_fluid_force: bool = False,
         sample_target: bool = False,
@@ -357,6 +358,7 @@ class Navigate(composer.Task):
 
         self.control_timestep = env_config["num_substeps"] * self.physics_timestep
         self.success = False
+        # # 获取相机矩阵（整合内参和外参，后续用于三维点→二维像素的转换)
         self.camera_matrix = self.get_camera_matrix(image_size=self.image_size, camera_name="top_camera")
         # self.camera_matrix = self.get_camera_matrix(image_size=self.image_size, camera_name="side")
         self.set_target(target)
@@ -422,10 +424,10 @@ class Navigate(composer.Task):
 
         self._task_observables = {}
 
-        # print("self.use_pixels = ",self.use_pixels) # True
+        # print("self.use_pixels = ",self.use_pixels) # True 图像
         # print("self.use_side = ",self.use_side) # False
-        # print("self.use_segment = ",self.use_segment) # True
-        # print("self.use_phantom_segment = ",self.use_phantom_segment) # False
+        # print("self.use_segment = ",self.use_segment) # True 导丝mask
+        # print("self.use_phantom_segment = ",self.use_phantom_segment) # False 血管mask
 
         if self.use_pixels:# True
             self._task_observables["pixels"] = CameraObservable(
@@ -449,7 +451,7 @@ class Navigate(composer.Task):
                     segmentation=True,
                 )
 
-        if self.use_segment:# True
+        if self.use_segment:# True 导丝mask
             guidewire_option = make_scene([1, 2])
 
             self._task_observables["guidewire"] = CameraObservable(
@@ -467,8 +469,7 @@ class Navigate(composer.Task):
             #     segmentation=True,
             # )
 
-        if self.use_phantom_segment:# False
-            print("if self.use_phantom_segment-------")
+        if self.use_phantom_segment:# False 血管mask
             phantom_option = make_scene([0])
             self._task_observables["phantom"] = CameraObservable(
                 camera_name="top_camera",
@@ -477,6 +478,9 @@ class Navigate(composer.Task):
                 scene_option=phantom_option,
                 segmentation=True,
             )
+
+        # 获取导丝尖端坐标
+        self._task_observables["tip_pos"] = observable.Generic(self.get_head_pos) # 使用已有的获取尖端位置的方法，取导丝尖端xyz坐标
 
         self._task_observables["joint_pos"] = observable.Generic(
             self.get_joint_positions
@@ -573,7 +577,7 @@ class Navigate(composer.Task):
 
     def get_head_pos(self, physics):
         """获取导丝头部的位置"""
-        return physics.named.data.geom_xpos[-1]  # 返回最后一个几何体（尖端）的位置
+        return physics.named.data.geom_xpos[-1]  # 返回最后一个几何体（导丝尖端）的位置
 
     def get_target_pos(self, physics):
         """获取目标位置"""
@@ -727,9 +731,13 @@ def make_dm_env(
     """
 
     phantom = Phantom(phantom + ".xml")
-    tip = Tip(n_bodies=4)
+    tip = Tip(n_bodies=2)
     # guidewire = Guidewire(n_bodies=80)
     guidewire = Guidewire(n_bodies=100)
+    # guidewire.mjcf_model.compiler.set_attributes(autolimits=True, angle="radian")
+    # mjcf.Physics.from_mjcf_model(guidewire.mjcf_model)
+    from pathlib import Path  # 确保导入Path
+    # guidewire.save_model(Path("H:/cathsim/src/cathsim/guidewire.xml"))
     # # 打印Tip的详细信息
     # print("===== Tip 详细信息 =====")
     # # 打印MJCF模型的XML结构
@@ -744,6 +752,9 @@ def make_dm_env(
         guidewire=guidewire,
         tip=tip,
         target=target,
+        # use_segment = True,# 启用导丝分割
+        use_phantom_segment=True,  # 启用血管分割
+        use_tip_pos=True,  # 启用尖端坐标
         **kwargs,
     )
     env = composer.Environment(
